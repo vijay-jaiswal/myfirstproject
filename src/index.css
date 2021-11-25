@@ -11,3 +11,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.log-out{
+  text-align: right;
+  width: auto;
+  background-attachment: fixed;
+  background-color: burlywood;
+
+ 
+}
+.login_form, .signUp_Form{
+  text-align: center;
+  margin: 0 auto;
+  width: 30rem;
+  background-color: aliceblue;
+  height: fit-content;
+  padding: 0.5rem;
+  margin-top: 3rem;
+}
+
+input::placeholder{
+  text-align: center;
+}
