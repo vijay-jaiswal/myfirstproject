@@ -1,20 +1,29 @@
 import React from "react";
 import { useState, useContext,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router";
 import "./Home.css";
 import { authenticate } from "./App";
 
-function Home(props) {
-  const [isLogin,handleIsLogin] = useContext(authenticate);
-
+function Home() {
+  const [isLogin, handleIsLogin] = useContext(authenticate);
+   const location=useLocation();
   const [inputList, setInputList] = useState("");
   const [items, setItems] = useState([]);
   const [inputDate, setInputDate] = useState("");
-
+  let navigate = useNavigate();
   function itemEvent(e) {
     setInputList(e.target.value);
   }
- 
+
+  // useEffect(() => {
+  //   if(JSON.parse(localStorage.getItem('access'))) {
+  //     // navigate.pushState(null, null, location.href);
+  //     window.onpopstate = function(event) {
+  //       navigation.navigate('home')
+  //     };
+  //   }
+  // }, [])
 
   function checkTask() {
     if (inputList === "") {
@@ -68,22 +77,33 @@ function Home(props) {
     });
   }
 
-  let navigate = useNavigate();
+  
+  function handleProfile(e) {
+    e.preventDefault();
+    navigate("profile");
+
+    //alert ("showing your profile");
+  }
   function handleLogout(e) {
     e.preventDefault();
-    
+
     //handleIsLogin();
     localStorage.removeItem("userLogin");
     localStorage.removeItem("access");
+    localStorage.removeItem("userDetail");
 
     alert("successfully logout");
     navigate("/");
   }
   return (
     <>
-      <h1>YOU ARE WELCOME</h1>
+      <h1 className="welcome">YOU ARE WELCOME</h1>
       <div className="log-out">
         <button onClick={handleLogout}>LOGOUT</button>
+      </div>
+
+      <div className="profile">
+        <button className="icon" onClick={handleProfile}>PROFILE</button>
       </div>
 
       <div id="myDIV" className="header">
@@ -107,14 +127,19 @@ function Home(props) {
         <ul>
           {items.map((val, index) => {
             return (
-              <li>
-                {val}
+              <table><tr>
+                <td> {val}
+                </td>
+                <td>
                 {
                   <span id="span1" onClick={() => deleteItem(index)}>
                     X
                   </span>
                 }
-              </li>
+              
+                </td>
+                </tr></table>
+               
             );
           })}
         </ul>

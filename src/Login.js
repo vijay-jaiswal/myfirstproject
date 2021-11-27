@@ -4,6 +4,10 @@ import { authenticate } from "./App";
 function Login(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
 
+  // const user = {
+  //   userNme: '',
+  //   password: ''
+  // }
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
   const [localData, setLocalData] = useState("");
@@ -20,21 +24,30 @@ function Login(props) {
   }, []);
 
   function handleLogin(e) {
-    e.preventDefault();
+  
 
-    const same = localData.filter((d) => d.email === user || d.phone === user);
+    e.preventDefault();
+    const userDetail = [];
+    const same = localData.filter((d) => {
+      if (d.email === user || d.phone === user) {
+        userDetail.push(d);
+        return true;
+      }
+    });
 
     if (same.length !== 0) {
       if (same[0].Password === password) {
         console.log("success");
-       handleIsLogin();
+        handleIsLogin();
         localStorage.setItem("access", true);
         localStorage.setItem("userLogin", user);
+        localStorage.setItem("userDetail", JSON.stringify(userDetail));
+
         setUser("");
         setPassword("");
-       setTimeout(() => {
+        setTimeout(() => {
           navigate("home");
-       }, 500);
+        }, 500);
       } else {
         alert("wrong password.");
       }
@@ -44,6 +57,7 @@ function Login(props) {
   }
   return (
     <div className="row">
+      <h1 className="loginpage">welcome back,please login</h1>
       <div className="login_form">
         <div className="login">
           <label>User id:</label>
@@ -58,13 +72,13 @@ function Login(props) {
           <label>Password:</label>
           <br />
           <input
-            type="text"
+            type="password"
             value={password}
             placeholder="enter password"
             onChange={(e) => setPassword(e.target.value)}
           />
           <br />
-          <button onClick={handleLogin}>login</button>
+          <button className="btn1" onClick={handleLogin}>login</button>
         </div>
         <p>please signup if you are not existing user </p>
         <Link to="/signup">SIGNUP</Link>
