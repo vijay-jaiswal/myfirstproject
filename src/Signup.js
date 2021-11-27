@@ -4,20 +4,28 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {} from "react-router";
 function Signup(props) {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
-  let navigate = useNavigate();
-  const [password1, setPassword1] = useState("");
-  const [password2, setPassword2] = useState("");
 
+  const [signUpData, setSignUpData] = useState({
+    firstName:'',
+    lastName:'',
+    phoneNumber:'',
+    email:'',
+    gender:'',
+    password1:'',
+    password2:''
+  })
+
+
+  const handleSignUp=(e)=>{
+     setSignUpData({...signUpData,[e.target.name]:e.target.value});
+  }
+
+  let navigate = useNavigate();
   function checkFName() {
     var pp = /^[a-zA-Z]*$/;
-    if (firstName === "") {
+    if (signUpData.firstName === "") {
       return " please write your first name\n";
-    } else if (!pp.test(firstName)) {
+    } else if (!pp.test(signUpData.firstName)) {
       return "only alphabet\n";
     } else {
       return "";
@@ -25,9 +33,9 @@ function Signup(props) {
   }
   function checkLName() {
     var pp = /^[a-zA-Z]*$/;
-    if (lastName === "") {
+    if (signUpData.lastName === "") {
       return " please write your last name\n";
-    } else if (!pp.test(lastName)) {
+    } else if (!pp.test(signUpData.lastName)) {
       return "only alphabet\n";
     } else {
       return "";
@@ -36,9 +44,9 @@ function Signup(props) {
 
   function checkPhone() {
     var pp = /^\d{10}$/;
-    if (phoneNumber === "") {
+    if (signUpData.phoneNumber === "") {
       return " please write your contact number\n";
-    } else if (!pp.test(phoneNumber)) {
+    } else if (!pp.test(signUpData.phoneNumber)) {
       return " phone no. should be 10 digit \n";
     } else {
       return "";
@@ -47,9 +55,9 @@ function Signup(props) {
 
   function checkEmail() {
     var pp = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
-    if (email === "") {
+    if (signUpData.email === "") {
       return " please write your email id\n";
-    } else if (!pp.test(email)) {
+    } else if (!pp.test(signUpData.email)) {
       return " email is not valid \n";
     } else {
       return "";
@@ -57,7 +65,7 @@ function Signup(props) {
   }
 
   function checkGender() {
-    if (gender === "") {
+    if (signUpData.gender === "") {
       return " please select gender\n";
     } else {
       return "";
@@ -68,9 +76,9 @@ function Signup(props) {
     var pp =
       /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
-    if (password1 === "") {
+    if (signUpData.password1 === "") {
       return " please write password\n";
-    } else if (!pp.test(password1)) {
+    } else if (!pp.test(signUpData.password1)) {
       return " password invalid should contain 8 digits and special character";
     } else {
       return "";
@@ -85,6 +93,7 @@ function Signup(props) {
     val += checkEmail();
     val += checkGender();
     val += checkPassword();
+    console.log(signUpData);
     if (val === "") {
       handleSignup();
     } else {
@@ -98,16 +107,16 @@ function Signup(props) {
     if (auth === null) {
       auth = [];
     }
-    if (password1 === password2) {
+    if (signUpData.password1 === signUpData.password2) {
       auth = [
         ...auth,
         {
-          fname: firstName,
-          lname: lastName,
-          phone: phoneNumber,
-          email: email,
-          gender: gender,
-          Password: password1,
+          fname: signUpData.firstName,
+          lname: signUpData.lastName,
+          phone: signUpData.phoneNumber,
+          email: signUpData.email,
+          gender: signUpData.gender,
+          Password: signUpData.password1,
         },
       ];
       localStorage.setItem("auth", JSON.stringify(auth));
@@ -116,13 +125,15 @@ function Signup(props) {
       alert("Passwords are not matching");
     }
 
-    setFirstName("");
-    setLastName("");
-    setPhoneNumber("");
-    setGender("");
-    setPassword1("");
-    setPassword2("");
-    setEmail("");
+      setSignUpData({
+        firstName:'',
+        lastName:'',
+        phoneNumber:'',
+        email:'',
+        gender:'',
+        password1:'',
+        password2:''
+      })
   };
 
   return (
@@ -133,37 +144,41 @@ function Signup(props) {
         <div className="SignUp">
           First Name:
           <input
+            name="firstName"
             type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={signUpData.firstName}
+            onChange={handleSignUp}
             placeholder="firstName"
           />
           <br />
           Last Name:
           <input
+          name="lastName"
             type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            value={signUpData.lastName}
+            onChange={handleSignUp}
             placeholder="lastName"
           />
           <br />
           Contact Number:
           <input
+          name="phoneNumber"
             type="number"
-            value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            value={signUpData.phoneNumber}
+            onChange={handleSignUp}
             placeholder="phoneNumber"
           />
           <br />
           Email Id:
           <input
+          name="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={signUpData.email}
+            onChange={handleSignUp}
             placeholder="email"
           />
           <br />
-          <div onChange={(e) => setGender(e.target.value)}>
+          <div onChange={handleSignUp} value={signUpData.gender}>
             Gender: <input type="radio" value="Male" name="gender" /> Male
             <input type="radio" value="Female" name="gender" /> Female
             <input type="radio" value="Other" name="gender" /> Other
@@ -171,18 +186,20 @@ function Signup(props) {
           <br />
           Password :
           <input
+          name="password1"
             type="password"
-            value={password1}
+            value={signUpData.password1}
             placeholder="Password"
-            onChange={(e) => setPassword1(e.target.value)}
+            onChange={handleSignUp}
           />
           <br />
           Confirm Password:
           <input
+           name="password2"
             type="password"
-            value={password2}
+            value={signUpData.password2}
             placeholder="ConfirmPassword"
-            onChange={(e) => setPassword2(e.target.value)}
+            onChange={handleSignUp}
           />
           <br />
           <button className="btn1" onClick={validation}>signup</button>

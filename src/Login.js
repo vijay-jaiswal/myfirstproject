@@ -3,13 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { authenticate } from "./App";
 function Login(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
-
-  // const user = {
-  //   userNme: '',
-  //   password: ''
-  // }
-  const [user, setUser] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginCredentials, setLoginCredentials] = useState({
+    user:'',
+    password:''
+  })
+  // const [user, setUser] = useState("");
+  // const [password, setPassword] = useState("");
   const [localData, setLocalData] = useState("");
   // const [isLogin, setIsLogin] = useState("false");
 
@@ -23,28 +22,42 @@ function Login(props) {
     }
   }, []);
 
-  function handleLogin(e) {
-  
+  const setLoginData=(e)=>{
+      setLoginCredentials({...loginCredentials,[e.target.name]:e.target.value});
+  }
 
+  function handleLogin(e) {
     e.preventDefault();
     const userDetail = [];
-    const same = localData.filter((d) => {
-      if (d.email === user || d.phone === user) {
+    if(loginCredentials.user.trim()===''){
+      alert('please enter userName');
+      return false;
+    }
+    if(loginCredentials.password.trim()===''){
+      alert('please enter password');
+      return false;
+    }
+    const matchData = localData.filter((d) => {
+      if (d.email === loginCredentials.user || d.phone === loginCredentials.user) {
         userDetail.push(d);
         return true;
       }
     });
 
-    if (same.length !== 0) {
-      if (same[0].Password === password) {
+    if (matchData.length !== 0) {
+      if (matchData[0].Password === loginCredentials.password) {
         console.log("success");
         handleIsLogin();
         localStorage.setItem("access", true);
-        localStorage.setItem("userLogin", user);
+        // localStorage.setItem("userLogin", loginCredentials.user);
         localStorage.setItem("userDetail", JSON.stringify(userDetail));
 
-        setUser("");
-        setPassword("");
+        // setUser("");
+        // setPassword("");
+        setLoginCredentials({
+          user:'',
+          password:''
+        })
         setTimeout(() => {
           navigate("home");
         }, 500);
@@ -52,7 +65,7 @@ function Login(props) {
         alert("wrong password.");
       }
     } else {
-      alert(`${user} user not exist!`);
+      alert(`${loginCredentials.user} user not exist!`);
     }
   }
   return (
@@ -63,19 +76,21 @@ function Login(props) {
           <label>User id:</label>
           <br />
           <input
+            name="user"
             type="text"
-            value={user}
-            onChange={(e) => setUser(e.target.value)}
+            value={loginCredentials.user}
+            onChange={setLoginData}
             placeholder="enter email or phone no."
           />
           <br />
           <label>Password:</label>
           <br />
           <input
+          name="password"
             type="password"
-            value={password}
+            value={loginCredentials.password}
             placeholder="enter password"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={setLoginData}
           />
           <br />
           <button className="btn1" onClick={handleLogin}>login</button>

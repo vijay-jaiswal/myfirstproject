@@ -7,6 +7,7 @@ import Profile from "./Profile";
 
 import { Route, Routes } from "react-router-dom";
 import Home from "./Home";
+import EditProfile from "./EditProfile";
 const authenticate = createContext();
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -32,6 +33,7 @@ function App() {
             )}
 
             {access && <Route path="/home" exact element={<Home />} />}
+            {access && <Route path="/home/profile/edit" exact element={<EditProfile />} />}
 
             <Route path="*" element={<Login />} />
           </Routes>

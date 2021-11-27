@@ -19,7 +19,10 @@ function Profile() {
         <div className="user">User Phone No.={userData[0].phone}</div>
         <div className="user">User Gender={userData[0].gender}</div>
         <h6>click to go back to home page </h6>
-        <Link to="/home">HOME</Link>
+        <div className='d-flex justify-content-between'>
+           <div><Link to="/home">HOME</Link></div>
+           <div><Link to={`/edit/1`}>Edit</Link></div>
+        </div>
       </div>
     </div>
   );
