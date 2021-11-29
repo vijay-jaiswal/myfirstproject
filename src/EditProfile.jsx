@@ -8,30 +8,36 @@ const EditProfile = () => {
     email: "",
     gender: "",
   });
+  const [userLoginDetails, setUserLoginDetails] = useState({});
   const [allLocalData, setAllLocalData] = useState([])
-  const [id, setid] = useState()
+  const [id, setid] = useState();
   const handleEdit = (e) => {
     const {name,value}=e.target;
     setEditedData({...editedData,[name]:value});
   };
 
   useEffect(() => {
-    let list=JSON.parse(localStorage.getItem("auth"))[0];
-      setEditedData(list);
-      setAllLocalData(JSON.parse(localStorage.getItem('auth')).filter((el,index)=>{
-        if(el.phone==editedData.phone){
-          setid(index);
-        }
-      }));
-      
+    setAllLocalData(JSON.parse(localStorage.getItem("auth")));
+    setEditedData(JSON.parse(localStorage.getItem("userDetail")));
+    setUserLoginDetails(JSON.parse(localStorage.getItem("userDetail")));
   }, []);
 
   const handleUpdate = (e) => {
     e.preventDefault();
     console.log(editedData);
-    localStorage.setItem("userDetail",JSON.stringify(editedData));
-    allLocalData[id]=editedData;
+    setEditedData({...editedData,id:new Date().getTime().toString()})
+    allLocalData.forEach((el,index)=>{
+      if(el.phone===userLoginDetails.phone){
+        setid(index);
+      }
+    })
+    // allLocalData[id]=editedData;
+    
+    // if(id){
+      setAllLocalData(allLocalData.splice(id,1,editedData));
     localStorage.setItem("auth",JSON.stringify(allLocalData));
+    localStorage.setItem("userDetail",JSON.stringify(editedData));
+    // }
   };
 
   return (

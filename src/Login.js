@@ -7,10 +7,7 @@ function Login(props) {
     user:'',
     password:''
   })
-  // const [user, setUser] = useState("");
-  // const [password, setPassword] = useState("");
   const [localData, setLocalData] = useState("");
-  // const [isLogin, setIsLogin] = useState("false");
 
   let navigate = useNavigate();
   useEffect(() => {
@@ -28,7 +25,7 @@ function Login(props) {
 
   function handleLogin(e) {
     e.preventDefault();
-    const userDetail = [];
+    let userDetail = {};
     if(loginCredentials.user.trim()===''){
       alert('please enter userName');
       return false;
@@ -39,7 +36,7 @@ function Login(props) {
     }
     const matchData = localData.filter((d) => {
       if (d.email === loginCredentials.user || d.phone === loginCredentials.user) {
-        userDetail.push(d);
+        userDetail=d;
         return true;
       }
     });
@@ -49,11 +46,8 @@ function Login(props) {
         console.log("success");
         handleIsLogin();
         localStorage.setItem("access", true);
-        // localStorage.setItem("userLogin", loginCredentials.user);
         localStorage.setItem("userDetail", JSON.stringify(userDetail));
 
-        // setUser("");
-        // setPassword("");
         setLoginCredentials({
           user:'',
           password:''

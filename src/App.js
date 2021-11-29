@@ -2,7 +2,7 @@ import "./App.css";
 import Signup from "./Signup";
 import Login from "./Login";
 import React, { createContext, useState, useEffect } from "react";
-import PageNotFound from "./PageNotFound";
+
 import Profile from "./Profile";
 
 import { Route, Routes } from "react-router-dom";
@@ -27,7 +27,7 @@ function App() {
         <div className="container-fluid">
           <Routes>
             { <Route path="/" exact element={<Login />} />}
-            <Route path="/signup" exact element={<Signup />} />
+            {! access && <Route path="/signup" exact element={<Signup />} /> }
             {access && (
               <Route path="/home/profile" exact element={<Profile />} />
             )}

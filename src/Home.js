@@ -9,81 +9,66 @@ import moment from 'moment';
 function Home() {
   const [isLogin, handleIsLogin] = useContext(authenticate);
   const location = useLocation();
-  // const [inputList, setInputList] = useState("");
-  // const [items, setItems] = useState([]);
-  // const [inputDate, setInputDate] = useState("");
   const [todos, setTodos] = useState({
     todo:'',
     dateTime:''
   })
   const [todoList, setTodoList] = useState([])
   let navigate = useNavigate();
-  // function itemEvent(e) {
-  //   setInputList(e.target.value);
-  // }
+  
+  let userData = JSON.parse(localStorage.getItem("userDetail"));
 
-  // function checkTask() {
-  //   if (inputList === "") {
-  //     return " please add task\n";
-  //   } else {
-  //     return "";
-  //   }
-  // }
+  function checkTask() {
+    if (todos.todo === "") {
+      return " please add task\n";
+    } else {
+      return "";
+    }
+  }
 
-  // function checkDate() {
-  //   if (inputDate === "") {
-  //     return " please select date\n";
-  //   } else {
-  //     return "";
-  //   }
-  // }
+  function checkDate() {
+    if (todos.dateTime === "") {
+      return " please select date\n";
+    } else {
+      return "";
+    }
+  }
 
-  // function validation() {
-  //   var val = "";
-  //   val = checkTask();
-  //   val += checkDate();
+  function validation() {
+    var val = "";
+    val = checkTask();
+    val += checkDate();
 
-  //   if (val === "") {
-  //     setItems((old) => {
-  //       return [...old, [inputList, "  ", inputDate]];
-  //     });
+    if (val === "") {
+    console.log(todos);
+    setTodoList([...todoList,todos])
+    console.log(todoList);
+      
 
-  //     setInputList("");
-  //     setInputDate("");
-  //   } else {
-  //     alert(val);
-  //     return false;
-  //   }
-  // }
+    
+    } else {
+      alert(val);
+      return false;
+    }
+    setTodos({
+      todo:'',
+      dateTime:''
+    
+    })
 
-  // function dateEvent(e) {
-  //   setInputDate(e.target.value);
-  // }
-
-  // function deleteTodo(id) {
-  //   console.log("deleted");
-
-  //   setItems((old) => {
-  //     return old.filter((arr, index) => {
-  //       return index !== id;
-  //     });
-  //   });
-  // }
-
+  }
   function deleteTodo(id) {
     setTodoList(todoList.filter((el,index)=>index!==id));
   }
 
   function handleProfile(e) {
     e.preventDefault();
-    navigate("profile/edit");
+    navigate("profile");
 
-    //alert ("showing your profile");
   }
   function handleLogout(e) {
     e.preventDefault();
 
-    //handleIsLogin();
     localStorage.removeItem("userLogin");
     localStorage.removeItem("access");
     localStorage.removeItem("userDetail");
@@ -98,17 +83,14 @@ function Home() {
   }
 
   function addTodo() {
-    // validation();
-    console.log(todos);
-    setTodoList([...todoList,todos])
-    console.log(todoList);
+    validation();
   }
 
   return (
     <>
-      <h1 className="welcome">YOU ARE WELCOME</h1>
+      <h1 className="welcome">Hello {userData.fname} </h1>
       <div className="log-out d-flex justify-content-between">
-        <div>Vijay</div>
+        <div></div>
         <div><button onClick={handleLogout}>LOGOUT</button></div>
       </div>
 
@@ -124,6 +106,7 @@ function Home() {
         name="todo"
           type="text"
           id="myInput"
+          required="true"
           onChange={handleTodo}
           value={todos.todo}
           placeholder="add task"
@@ -138,25 +121,7 @@ function Home() {
         <button onClick={addTodo} className="addBtn">
           Add
         </button>
-        {/* <ul>
-          {items.map((val, index) => {
-            return (
-              <table><tr>
-                <td> {val}
-                </td>
-                <td>
-                {
-                  <span id="span1" onClick={() => deleteTodo(index)}>
-                    X
-                  </span>
-                }
-              
-                </td>
-                </tr></table>
-               
-            );
-          })}
-        </ul> */}
+        {}
         <div className="mt-4 bg-warning">
           <table class="table">
             <thead>
@@ -172,9 +137,9 @@ function Home() {
                 todoList.map((todos, index) => {
                   return (
                     <tr>
-                      <th scope="row">{index+1}</th>
+                      <td scope="row">{index+1}</td>
                       <td>{todos.todo}</td>
-                      <td>{moment(todos.dateTime).format("LLLL")}</td>
+                      <td>{moment(todos.dateTime).format( 'DD-MMMM-YYYY |hh:mm:ss a')}</td>
                       <td><span id="span1" onClick={() => deleteTodo(index)}>
                     X
                   </span></td>
