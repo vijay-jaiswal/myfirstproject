@@ -1,11 +1,11 @@
 import React from 'react'
 
 function Header(props) {
-  const ddd = window.location.href; 
-  console.log(ddd); 
+  const Url = window.location.href; 
+  console.log(Url); 
 
 
-if (ddd=="http://localhost:3000/home"){
+if (Url=="http://localhost:3000/home"){
     return (
         <div>
           
@@ -24,7 +24,7 @@ if (ddd=="http://localhost:3000/home"){
         </div>
     )}
 
-    else if(ddd=="http://localhost:3000/profile") {
+    else if(Url=="http://localhost:3000/profile") {
       return(
 
 
