@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import swal from 'sweetalert';
+import Header from "./Header";
 
 const EditProfile = () => {
   const [editedData, setEditedData] = useState({
@@ -8,80 +11,89 @@ const EditProfile = () => {
     email: "",
     gender: "",
   });
-  const [userLoginDetails, setUserLoginDetails] = useState({});
-  const [allLocalData, setAllLocalData] = useState([])
-  const [id, setid] = useState();
+  let navigate = useNavigate();
+  let userData = JSON.parse(localStorage.getItem("userDetail"));
+  useEffect(() => {}, []);
+
   const handleEdit = (e) => {
-    const {name,value}=e.target;
-    setEditedData({...editedData,[name]:value});
+    debugger;
+    setEditedData({ ...editedData, [e.target.name]: e.target.value });
   };
-
-  useEffect(() => {
-    setAllLocalData(JSON.parse(localStorage.getItem("auth")));
-    setEditedData(JSON.parse(localStorage.getItem("userDetail")));
-    setUserLoginDetails(JSON.parse(localStorage.getItem("userDetail")));
-  }, []);
-
   const handleUpdate = (e) => {
     e.preventDefault();
     console.log(editedData);
-    setEditedData({...editedData,id:new Date().getTime().toString()})
-    allLocalData.forEach((el,index)=>{
-      if(el.phone===userLoginDetails.phone){
-        setid(index);
-      }
-    })
-    // allLocalData[id]=editedData;
-    
-    // if(id){
-      setAllLocalData(allLocalData.splice(id,1,editedData));
-    localStorage.setItem("auth",JSON.stringify(allLocalData));
-    localStorage.setItem("userDetail",JSON.stringify(editedData));
-    // }
+    navigate("/home");
   };
+  
+  function routeHome(){
+    navigate("/home");
+
+   }
+  function handleLogout(e) {
+    e.preventDefault();
+
+    localStorage.removeItem("userLogin");
+    localStorage.removeItem("access");
+    localStorage.removeItem("userDetail");
+
+    // alert("successfully logout");
+    swal("successfully logout!", "You clicked at logout!", "success");
+
+    navigate("/");
+  }
+
 
   return (
     <div>
+    <Header logout={handleLogout}  home={routeHome}  />
+      
       <div className="signUp_Form">
         <div className="SignUp">
-          First Name:
+          <label>First Name:</label>
+          <br />
           <input
             name="fname"
             type="text"
-            defaultValue={editedData.fname}
+            defaultValue={userData.fname}
             onChange={handleEdit}
             placeholder="firstName"
             required
             contentEditable
           />
           <br />
-          Last Name:
+
+          <label>Last Name:</label>
+          <br />
           <input
             name="lname"
             type="text"
-            defaultValue={editedData.lname}
+            defaultValue={userData.lname}
             onChange={handleEdit}
             placeholder="lastName"
             required
             contentEditable
           />
           <br />
-          Contact Number:
+
+          <label>Contact Number:</label>
+          <br />
           <input
             name="phone"
             type="number"
-            defaultValue={editedData.phone}
+            defaultValue={userData.phone}
             onChange={handleEdit}
             placeholder="phoneNumber"
             required
             contentEditable
           />
           <br />
-          Email Id:
+
+          <label>Email Id:</label>
+          <br />
           <input
             name="email"
             type="email"
-            defaultValue={editedData.email} 
+            defaultValue={userData.email}
             onChange={handleEdit}
             placeholder="email"
             required
@@ -92,10 +104,11 @@ const EditProfile = () => {
             Gender:
             <input
               type="radio"
-              defaultValue="Male"
+              value="Male"
               name="gender"
               onChange={handleEdit}
               checked={editedData.gender === "Male"}
+              contentEditable
             />
             Male
             <input
@@ -104,6 +117,7 @@ const EditProfile = () => {
               name="gender"
               onChange={handleEdit}
               checked={editedData.gender === "Female"}
+              contentEditable
             />
             Female
             <input
@@ -112,6 +126,7 @@ const EditProfile = () => {
               name="gender"
               onChange={handleEdit}
               checked={editedData.gender === "Other"}
+              contentEditable
             />
             Other
           </div>

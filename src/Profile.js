@@ -1,28 +1,85 @@
 import React, { Component } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useState, useContext ,createContext} from "react";
+import swal from 'sweetalert';
+import Header from "./Header";
 
-function Profile() {
+
+
+import Home, { logoutContext } from "./Home";
+ 
+
+function Profile(props) {
+ 
+
+  const logout1 = useContext(logoutContext);
+
   let userData = JSON.parse(localStorage.getItem("userDetail"));
-  //  let data = JSON.parse(localStorage.getItem("auth"));
-  // const same = data.filter((d) => d.email === userData || d.phone === userData);
-  //console.log(same.length);
-  // console.log(data.length);
-  console.log(userData.length);
-  console.log(userData);
+  let navigate = useNavigate();
 
+   function routeHome(){
+    navigate("/home");
+
+   }
+   function routeEdit(){
+    navigate("/edit");
+     
+  }
+  
+  function handleLogout(e) {
+    e.preventDefault();
+
+    localStorage.removeItem("userLogin");
+    localStorage.removeItem("access");
+    localStorage.removeItem("userDetail");
+
+    swal("successfully logout!", "You clicked at logout!", "success");
+
+    navigate("/");
+  }
+  
   return (
     <div>
+    <Header home={routeHome}  edit={routeEdit}  logout={handleLogout} />
+      
       <div className="users">
-        <div className="user">User First Name={userData.fname}</div>
-        <div className="user">User Last Name ={userData.lname}</div>
-        <div className="user">User Email={userData.email}</div>
-        <div className="user">User Phone No.={userData.phone}</div>
-        <div className="user">User Gender={userData.gender}</div>
-        <h6>click to go back to home page </h6>
-        <div className='d-flex justify-content-between'>
-           <div><Link to="/home">HOME</Link></div>
-           <div><Link to="/home/profile/edit">Edit</Link></div>
-        </div>
+        <table>
+          <td>
+          <tr>
+           First Name:
+          </tr>
+<tr>
+ Last Name:
+</tr>
+<tr>
+           Email:
+          </tr>
+          <tr>
+           Phone No.:
+          </tr>
+          <tr>
+         Gender:
+          </tr>
+          </td>
+          <td>
+          <tr>
+          {userData.fname}
+          </tr>
+<tr>
+{userData.lname}
+</tr>
+<tr>
+{userData.email}
+          </tr>
+          <tr>
+          {userData.phone}
+          </tr>
+          <tr>
+          {userData.gender}
+          </tr>
+          </td>
+         
+          </table>
       </div>
     </div>
   );

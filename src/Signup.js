@@ -2,23 +2,21 @@ import React from "react";
 import "./App.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {} from "react-router";
+import Input from "./Input";
 function Signup(props) {
-
   const [signUpData, setSignUpData] = useState({
-    firstName:'',
-    lastName:'',
-    phoneNumber:'',
-    email:'',
-    gender:'',
-    password1:'',
-    password2:''
-  })
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    gender: "",
+    password1: "",
+    password2: "",
+  });
 
-
-  const handleSignUp=(e)=>{
-     setSignUpData({...signUpData,[e.target.name]:e.target.value});
-  }
+  const handleSignUp = (e) => {
+    setSignUpData({ ...signUpData, [e.target.name]: e.target.value });
+  };
 
   let navigate = useNavigate();
   function checkFName() {
@@ -84,20 +82,47 @@ function Signup(props) {
       return "";
     }
   }
+  const [error, setError] = useState("");
+  const [error1, setError1] = useState("");
+  const [error2, setError2] = useState("");
+  const [error3, setError3] = useState("");
+  const [error4, setError4] = useState("");
+  const [error5, setError5] = useState("");
 
   function validation() {
     var val = "";
+    var val1 = "";
+
+    var val2 = "";
+
+    var val3 = "";
+    var val4 = "";
+    var val5 = "";
+
     val = checkFName();
-    val += checkLName();
-    val += checkPhone();
-    val += checkEmail();
-    val += checkGender();
-    val += checkPassword();
+    val1 = checkLName();
+    val2 = checkPhone();
+    val3 = checkEmail();
+    val4 = checkGender();
+    val5 = checkPassword();
     console.log(signUpData);
-    if (val === "") {
+    if (
+      val === "" &&
+      val1 === "" &&
+      val2 === "" &&
+      val3 === "" &&
+      val4 === "" &&
+      val5 === ""
+    ) {
       handleSignup();
     } else {
-      alert(val);
+      setError(val);
+      setError1(val1);
+      setError2(val2);
+      setError3(val3);
+      setError4(val4);
+      setError5(val5);
+
       return false;
     }
   }
@@ -122,88 +147,92 @@ function Signup(props) {
       localStorage.setItem("auth", JSON.stringify(auth));
       navigate("/");
     } else {
-      alert("Passwords are not matching");
+      const d = "Passwords are not matching";
+      setError5(d);
     }
 
-      setSignUpData({
-        firstName:'',
-        lastName:'',
-        phoneNumber:'',
-        email:'',
-        gender:'',
-        password1:'',
-        password2:''
-      })
+    setSignUpData({
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      email: "",
+      gender: "",
+      password1: "",
+      password2: "",
+    });
   };
 
   return (
-        <div className="row">
-        <h1 className="register"> Please Register first to login</h1>
-
+    <div className="row">
       <div className="signUp_Form">
         <div className="SignUp">
-          First Name:
-          <input
-            name="firstName"
-            type="text"
+          <label>First Name:</label>
+          <Input
+            name={"firstName"}
+            type={"text"}
+            onChange={handleSignUp}
+            placeholder={"firstName"}
             value={signUpData.firstName}
-            onChange={handleSignUp}
-            placeholder="firstName"
           />
-          <br />
-          Last Name:
-          <input
-          name="lastName"
-            type="text"
+          <p className=" text-danger">{error}</p>
+          <label>Last Name:</label>
+          <Input
+            name={"lastName"}
+            type={"text"}
+            onChange={handleSignUp}
+            placeholder={"lastName"}
             value={signUpData.lastName}
-            onChange={handleSignUp}
-            placeholder="lastName"
           />
-          <br />
-          Contact Number:
-          <input
-          name="phoneNumber"
-            type="number"
+          <p className=" text-danger">{error1}</p>
+          <label>Contact Number:</label>
+          <Input
+            name={"phoneNumber"}
+            type={"number"}
+            onChange={handleSignUp}
+            placeholder={"phoneNumber"}
             value={signUpData.phoneNumber}
-            onChange={handleSignUp}
-            placeholder="phoneNumber"
           />
-          <br />
-          Email Id:
-          <input
-          name="email"
-            type="email"
+
+          <p className=" text-danger">{error2}</p>
+          <label>Email Id:</label>
+          <Input
+            name={"email"}
+            type={"email"}
+            onChange={handleSignUp}
+            placeholder={"email"}
             value={signUpData.email}
-            onChange={handleSignUp}
-            placeholder="email"
           />
-          <br />
+          <p className=" text-danger">{error3}</p>
+
           <div onChange={handleSignUp} value={signUpData.gender}>
             Gender: <input type="radio" value="Male" name="gender" /> Male
             <input type="radio" value="Female" name="gender" /> Female
             <input type="radio" value="Other" name="gender" /> Other
           </div>
-          <br />
-          Password :
-          <input
-          name="password1"
-            type="password"
+          <p className=" text-danger">{error4}</p>
+          <label>Password:</label>
+          <Input
+            name={"password1"}
+            type={"Password"}
+            onChange={handleSignUp}
+            placeholder={"Password"}
             value={signUpData.password1}
-            placeholder="Password"
-            onChange={handleSignUp}
           />
-          <br />
-          Confirm Password:
-          <input
-           name="password2"
-            type="password"
+
+          <p className=" text-danger">{error5}</p>
+
+          <label>Confirm Password:</label>
+          <Input
+            name={"password2"}
+            type={"Password"}
+            onChange={handleSignUp}
+            placeholder={"ConfirmPassword"}
             value={signUpData.password2}
-            placeholder="ConfirmPassword"
-            onChange={handleSignUp}
           />
-          <br />
-          <button className="btn1" onClick={validation}>signup</button>
-          <br />
+
+          <button type="button" class="btn btn-primary" onClick={validation}>
+            signup
+          </button>
         </div>
 
         <p>already signup,click to login </p>

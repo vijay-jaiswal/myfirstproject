@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authenticate } from "./App";
+
+import Input from "./Input";
 function Login(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
   const [loginCredentials, setLoginCredentials] = useState({
-    user:'',
-    password:''
-  })
+    user: "",
+    password: "",
+  });
   const [localData, setLocalData] = useState("");
+  const [error, setError] = useState("");
+  const [error1, setError1] = useState("");
 
   let navigate = useNavigate();
   useEffect(() => {
@@ -19,24 +23,33 @@ function Login(props) {
     }
   }, []);
 
-  const setLoginData=(e)=>{
-      setLoginCredentials({...loginCredentials,[e.target.name]:e.target.value});
-  }
+  const setLoginData = (e) => {
+    setLoginCredentials({
+      ...loginCredentials,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   function handleLogin(e) {
     e.preventDefault();
     let userDetail = {};
-    if(loginCredentials.user.trim()===''){
-      alert('please enter userName');
+    if (loginCredentials.user.trim() === "") {
+      const d = "please enter user detail";
+      setError(d);
       return false;
     }
-    if(loginCredentials.password.trim()===''){
-      alert('please enter password');
+    if (loginCredentials.password.trim() === "") {
+      const d = "please enter password";
+      setError1(d);
+
       return false;
     }
     const matchData = localData.filter((d) => {
-      if (d.email === loginCredentials.user || d.phone === loginCredentials.user) {
-        userDetail=d;
+      if (
+        d.email === loginCredentials.user ||
+        d.phone === loginCredentials.user
+      ) {
+        userDetail = d;
         return true;
       }
     });
@@ -49,48 +62,68 @@ function Login(props) {
         localStorage.setItem("userDetail", JSON.stringify(userDetail));
 
         setLoginCredentials({
-          user:'',
-          password:''
-        })
+          user: "",
+          password: "",
+        });
         setTimeout(() => {
           navigate("home");
         }, 500);
       } else {
-        alert("wrong password.");
+        setError1("wrong password.");
       }
     } else {
-      alert(`${loginCredentials.user} user not exist!`);
+      const d = `${loginCredentials.user} user not exist!`;
+      setError(d);
     }
   }
   return (
-    <div className="row">
-      <h1 className="loginpage">welcome back,please login</h1>
-      <div className="login_form">
-        <div className="login">
-          <label>User id:</label>
-          <br />
-          <input
-            name="user"
-            type="text"
-            value={loginCredentials.user}
-            onChange={setLoginData}
-            placeholder="enter email or phone no."
-          />
-          <br />
-          <label>Password:</label>
-          <br />
-          <input
-          name="password"
-            type="password"
-            value={loginCredentials.password}
-            placeholder="enter password"
-            onChange={setLoginData}
-          />
-          <br />
-          <button className="btn1" onClick={handleLogin}>login</button>
+    <div className="container-fluid  " id="full">
+      <div className="row  vh-100">
+        <div className="col  vh-100">
+          <h1 className="intro">
+            hi buddy,
+            <br />
+            vbook help u to manage your daily work{" "}
+          </h1>
+          <img src="draw22.png"></img>
         </div>
-        <p>please signup if you are not existing user </p>
-        <Link to="/signup">SIGNUP</Link>
+        <div className="col-auto  vh-100  " id="full1">
+          <h1 id="strt"> Welcome to Vbook</h1>
+
+          <div className="login_form">
+            <div className="login">
+              <label>User id:</label>
+              <Input
+                name={"user"}
+                type={"text"}
+                onChange={setLoginData}
+                placeholder={"enter email or phone no."}
+                value={loginCredentials.user}
+              />
+              <p className=" text-danger">{error}</p>
+              <label>Password:</label>
+              <Input
+                name={"password"}
+                type={"password"}
+                onChange={setLoginData}
+                placeholder={"enter password"}
+                value={loginCredentials.password}
+              />
+              <p className=" text-danger">{error1}</p>
+
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleLogin}
+              >
+                login
+              </button>
+            </div>
+
+            <p>please signup if you are not existing user </p>
+            <Link to="/signup">SIGNUP</Link>
+          </div>
+        </div>
       </div>
     </div>
   );

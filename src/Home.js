@@ -1,21 +1,62 @@
 import React from "react";
-import { useState, useContext } from "react";
+import { useState, useContext, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router";
 import "./Home.css";
 import { authenticate } from "./App";
-import moment from 'moment';
+import moment from "moment";
+import Header from "./Header";
+import Profile from "./Profile";
+import swal from "sweetalert";
 
-function Home() {
+const logoutContext = createContext();
+
+function Home(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
   const location = useLocation();
   const [todos, setTodos] = useState({
-    todo:'',
-    dateTime:''
-  })
-  const [todoList, setTodoList] = useState([])
+    todo: "",
+    dateTime: "",
+  });
+
+  // var auth = JSON.parse(localStorage.getItem("auth"));
+  // const handleSignup = () => {
+  //   if (auth === null) {
+  //     auth = [];
+  //   }
+  //   if (signUpData.password1 === signUpData.password2) {
+  //     auth = [
+  //       ...auth,
+  //       {
+  //         fname: signUpData.firstName,
+  //         lname: signUpData.lastName,
+  //         phone: signUpData.phoneNumber,
+  //         email: signUpData.email,
+  //         gender: signUpData.gender,
+  //         Password: signUpData.password1,
+  //       },
+  //     ];
+  //     localStorage.setItem("auth", JSON.stringify(auth));
+  //     navigate("/");
+  //   } else {
+  //     const d = "Passwords are not matching";
+  //     setError5(d);
+  //   }
+
+  //   setSignUpData({
+  //     firstName: "",
+  //     lastName: "",
+  //     phoneNumber: "",
+  //     email: "",
+  //     gender: "",
+  //     password1: "",
+  //     password2: "",
+  //   });
+  // };
+
+  const [todoList, setTodoList] = useState([]);
   let navigate = useNavigate();
-  
+
   let userData = JSON.parse(localStorage.getItem("userDetail"));
 
   function checkTask() {
@@ -40,31 +81,25 @@ function Home() {
     val += checkDate();
 
     if (val === "") {
-    console.log(todos);
-    setTodoList([...todoList,todos])
-    console.log(todoList);
-      
-
-    
+      console.log(todos);
+      setTodoList([...todoList, todos]);
+      console.log(todoList);
     } else {
       alert(val);
       return false;
     }
     setTodos({
-      todo:'',
-      dateTime:''
-    
-    })
-
+      todo: "",
+      dateTime: "",
+    });
   }
   function deleteTodo(id) {
-    setTodoList(todoList.filter((el,index)=>index!==id));
+    setTodoList(todoList.filter((el, index) => index !== id));
   }
 
   function handleProfile(e) {
     e.preventDefault();
-    navigate("profile");
-
+    navigate("/profile");
   }
   function handleLogout(e) {
     e.preventDefault();
@@ -73,37 +108,37 @@ function Home() {
     localStorage.removeItem("access");
     localStorage.removeItem("userDetail");
 
-    alert("successfully logout");
+    // alert("successfully logout");
+    swal("successfully logout!", "You clicked at logout!", "success");
+
     navigate("/");
   }
 
+  const handleTodo = (e) => {
+    setTodos({ ...todos, [e.target.name]: e.target.value });
+  };
 
-  const handleTodo=(e)=>{
-    setTodos({...todos,[e.target.name]:e.target.value});
-  }
+  function addTodo(e) {
+    e.preventDefault();
 
-  function addTodo() {
     validation();
   }
 
   return (
     <>
-      <h1 className="welcome">Hello {userData.fname} </h1>
-      <div className="log-out d-flex justify-content-between">
-        <div></div>
-        <div><button onClick={handleLogout}>LOGOUT</button></div>
-      </div>
+      <logoutContext.Provider value={handleLogout}>
+        {(Profile)}
+      </logoutContext.Provider>
 
-      <div className="profile">
-        <button className="icon" onClick={handleProfile}>
-          PROFILE
-        </button>
-      </div>
+      <Header logout={handleLogout} profile={handleProfile} />
+
+      <h1 className="welcome">Hello {userData.fname} </h1>
+      <div className="log-out d-flex justify-content-between"></div>
 
       <div id="myDIV" className="header">
         <h2>My To Do List</h2>
         <input
-        name="todo"
+          name="todo"
           type="text"
           id="myInput"
           required="true"
@@ -112,7 +147,7 @@ function Home() {
           placeholder="add task"
         />
         <input
-        name="dateTime"
+          name="dateTime"
           type="dateTime-local"
           id="myDate"
           onChange={handleTodo}
@@ -126,9 +161,9 @@ function Home() {
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Sr. No</th>
-                <th scope="col">Todo List</th>
-                <th scope="col">Date</th>
+                <th>Sr. No</th>
+                <th>Todo List</th>
+                <th>Date</th>
                 <th></th>
               </tr>
             </thead>
@@ -137,12 +172,18 @@ function Home() {
                 todoList.map((todos, index) => {
                   return (
                     <tr>
-                      <td scope="row">{index+1}</td>
+                      <td>{index + 1}</td>
                       <td>{todos.todo}</td>
-                      <td>{moment(todos.dateTime).format( 'DD-MMMM-YYYY |hh:mm:ss a')}</td>
-                      <td><span id="span1" onClick={() => deleteTodo(index)}>
-                    X
-                  </span></td>
+                      <td>
+                        {moment(todos.dateTime).format(
+                          "DD-MMMM-YYYY |hh:mm:ss a"
+                        )}
+                      </td>
+                      <td>
+                        <span id="span1" onClick={() => deleteTodo(index)}>
+                          X
+                        </span>
+                      </td>
                     </tr>
                   );
                 })}
@@ -154,3 +195,4 @@ function Home() {
   );
 }
 export default Home;
+export { logoutContext };

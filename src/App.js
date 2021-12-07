@@ -26,14 +26,12 @@ function App() {
       <authenticate.Provider value={authenticateData}>
         <div className="container-fluid">
           <Routes>
-            { <Route path="/" exact element={<Login />} />}
-            {! access && <Route path="/signup" exact element={<Signup />} /> }
-            {access && (
-              <Route path="/home/profile" exact element={<Profile />} />
-            )}
+            {<Route path="/" exact element={<Login />} />}
+            {!access && <Route path="/signup" exact element={<Signup />} />}
+            {access && <Route path="/profile" exact element={<Profile />} />}
 
             {access && <Route path="/home" exact element={<Home />} />}
-            {access && <Route path="/home/profile/edit" exact element={<EditProfile />} />}
+            {access && <Route path="/edit" exact element={<EditProfile />} />}
 
             <Route path="*" element={<Login />} />
           </Routes>
