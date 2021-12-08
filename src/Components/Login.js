@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authenticate } from "./App";
+import { authenticate } from "../App";
 
 import Input from "./Input";
 function Login(props) {
@@ -34,13 +34,11 @@ function Login(props) {
     e.preventDefault();
     let userDetail = {};
     if (loginCredentials.user.trim() === "") {
-      const d = "please enter user detail";
-      setError(d);
+      setError("please enter user detail");
       return false;
     }
     if (loginCredentials.password.trim() === "") {
-      const d = "please enter password";
-      setError1(d);
+      setError1("please enter password");
 
       return false;
     }
@@ -73,7 +71,7 @@ function Login(props) {
       }
     } else {
       const d = `${loginCredentials.user} user not exist!`;
-      setError(d);
+      setError1(d);
     }
   }
   return (

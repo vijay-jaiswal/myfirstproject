@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import swal from 'sweetalert';
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
 import Header from "./Header";
+import { authenticate } from "../App";
+import { profileContext } from "../Components/Profile";
 
 const EditProfile = () => {
+  // const [useProfileContext]=useContext(profileContext);
+  const [isLogin, handleIsLogin] = useContext(authenticate);
+
   const [editedData, setEditedData] = useState({
     fname: "",
     lname: "",
@@ -16,7 +21,6 @@ const EditProfile = () => {
   useEffect(() => {}, []);
 
   const handleEdit = (e) => {
-    debugger;
     setEditedData({ ...editedData, [e.target.name]: e.target.value });
   };
   const handleUpdate = (e) => {
@@ -24,29 +28,28 @@ const EditProfile = () => {
     console.log(editedData);
     navigate("/home");
   };
-  
-  function routeHome(){
-    navigate("/home");
 
-   }
+  function routeHome() {
+    navigate("/home");
+  }
   function handleLogout(e) {
     e.preventDefault();
 
     localStorage.removeItem("userLogin");
     localStorage.removeItem("access");
+    handleIsLogin();
+
     localStorage.removeItem("userDetail");
 
-    // alert("successfully logout");
     swal("successfully logout!", "You clicked at logout!", "success");
 
     navigate("/");
   }
 
-
   return (
     <div>
-    <Header logout={handleLogout}  home={routeHome}  />
-      
+      <Header logout={handleLogout} home={routeHome} />
+
       <div className="signUp_Form">
         <div className="SignUp">
           <label>First Name:</label>
