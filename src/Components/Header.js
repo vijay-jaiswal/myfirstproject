@@ -1,8 +1,8 @@
 import React from "react";
+import Logout from "./Logout";
 
 function Header(props) {
   const Url = window.location.pathname;
-  console.log(Url);
 
   if (Url === "/edit") {
     return (
@@ -21,14 +21,7 @@ function Header(props) {
               >
                 HOME
               </button>
-
-              <button
-                className="btn btn-outline-danger text-black bg-danger"
-                onClick={props.logout}
-                type="submit"
-              >
-                LOGOUT
-              </button>
+              <Logout></Logout>
             </form>
           </div>
         </nav>
@@ -59,13 +52,7 @@ function Header(props) {
               >
                 HOME
               </button>
-              <button
-                className="btn btn-outline-danger text-black bg-danger"
-                onClick={props.logout}
-                type="submit"
-              >
-                LOGOUT
-              </button>
+              <Logout></Logout>
             </form>
           </div>
         </nav>
@@ -88,13 +75,7 @@ function Header(props) {
                 PROFILE
               </button>
 
-              <button
-                className="btn btn-outline-danger text-black bg-danger"
-                onClick={props.logout}
-                type="submit"
-              >
-                LOGOUT
-              </button>
+              <Logout></Logout>
             </form>
           </div>
         </nav>

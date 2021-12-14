@@ -54,7 +54,6 @@ function Login(props) {
 
     if (matchData.length !== 0) {
       if (matchData[0].Password === loginCredentials.password) {
-        console.log("success");
         handleIsLogin();
         localStorage.setItem("access", true);
         localStorage.setItem("userDetail", JSON.stringify(userDetail));
@@ -83,7 +82,7 @@ function Login(props) {
             <br />
             vbook help u to manage your daily work{" "}
           </h1>
-          <img src="draw22.png"></img>
+          <img src="draw22.png" alt="www.google.com"></img>
         </div>
         <div className="col-auto  vh-100  " id="full1">
           <h1 id="strt"> Welcome to Vbook</h1>

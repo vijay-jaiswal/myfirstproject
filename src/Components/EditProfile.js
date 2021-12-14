@@ -1,15 +1,9 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import swal from "sweetalert";
 import Header from "./Header";
-import { authenticate } from "../App";
-import { profileContext } from "../Components/Profile";
 
 const EditProfile = () => {
-  // const [useProfileContext]=useContext(profileContext);
-  const [isLogin, handleIsLogin] = useContext(authenticate);
-  const [id, setid] = useState();
-  
+
   const [userLoginDetails, setUserLoginDetails] = useState({});
   const [allLocalData, setAllLocalData] = useState([]);
 
@@ -20,7 +14,7 @@ const EditProfile = () => {
     email: "",
     gender: "",
   });
-  
+
   useEffect(() => {
     setAllLocalData(JSON.parse(localStorage.getItem("auth")));
     setEditedData(JSON.parse(localStorage.getItem("userDetail")));
@@ -33,46 +27,27 @@ const EditProfile = () => {
   const handleUpdate = (e) => {
     e.preventDefault();
     console.log(editedData);
-    // debugger;
 
-    allLocalData.forEach((el,index)=>{
-      if(el.phone===userLoginDetails.phone){
-        console.log(index)
-        setAllLocalData(allLocalData.splice(index,1,editedData));
-        localStorage.setItem("userDetail",JSON.stringify(editedData));
-      
-        localStorage.setItem("auth",JSON.stringify(allLocalData))
-      
-        setid(index);
-      }})
-  // if(id){
-   
-  // }
-  navigate("/home");
+    allLocalData.forEach((el, index) => {
+      if (el.phone === userLoginDetails.phone) {
+        console.log(index);
+        setAllLocalData(allLocalData.splice(index, 1, editedData));
+        localStorage.setItem("userDetail", JSON.stringify(editedData));
 
-};
+        localStorage.setItem("auth", JSON.stringify(allLocalData));
+      }
+    });
 
+    navigate("/home");
+  };
 
   function routeHome() {
     navigate("/home");
   }
-  function handleLogout(e) {
-    e.preventDefault();
-
-    localStorage.removeItem("userLogin");
-    localStorage.removeItem("access");
-    handleIsLogin();
-
-    localStorage.removeItem("userDetail");
-
-    swal("successfully logout!", "You clicked at logout!", "success");
-
-    navigate("/");
-  }
 
   return (
     <div>
-      <Header logout={handleLogout} home={routeHome} />
+      <Header home={routeHome} />
 
       <div className="signUp_Form">
         <div className="SignUp">

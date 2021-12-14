@@ -8,7 +8,6 @@ import Profile from "./Components/Profile";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Components/Home";
 import EditProfile from "./Components/EditProfile";
-import PageNotFound from "./Components/PageNotFound";
 
 const authenticate = createContext();
 function App() {
@@ -18,7 +17,6 @@ function App() {
   };
   const [access, setAccess] = useState(false);
   useEffect(() => {
-    // setIsLogin(localStorage.setItem('isLogin',isLogin));
     setAccess(JSON.parse(localStorage.getItem("access")));
   }, [isLogin]);
 
