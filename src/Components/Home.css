@@ -35,3 +35,9 @@
     width: 400px;
     height: 40px;
   }
+  .complete{
+    background-color: blueviolet;
+  }
+  .todo-row{
+    background-color: cadetblue;
+  }

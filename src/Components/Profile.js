@@ -10,7 +10,7 @@ const profileContext = createContext();
 
 function Profile(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
-  //const useLogoutContext= useContext(logoutContext);
+  //const [useLogoutContext]= useContext(logoutContext);
   //useLogoutContext();
 
   let userData = JSON.parse(localStorage.getItem("userDetail"));

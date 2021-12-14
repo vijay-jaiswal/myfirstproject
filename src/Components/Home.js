@@ -1,12 +1,10 @@
 import React from "react";
 import { useState, useContext, createContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router";
 import "./Home.css";
 import { authenticate } from "../App";
 import moment from "moment";
 import Header from "./Header";
-import Profile from "./Profile";
 import swal from "sweetalert";
 
 const logoutContext = createContext();
@@ -14,8 +12,6 @@ const logoutContext = createContext();
 function Home(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
 
-  const [logout, setLogout] = useState("0");
-  const location = useLocation();
 
   let navigate = useNavigate();
 
@@ -30,6 +26,7 @@ function Home(props) {
         {
           todo1: todos.todo,
           date1: todos.dateTime,
+          isCompleted: false,
         },
       ];
       localStorage.setItem("todoTask", JSON.stringify(todoTask));
@@ -45,6 +42,7 @@ function Home(props) {
           {
             todo1: todos.todo,
             date1: todos.dateTime,
+            isCompleted: false,
           },
         ];
         localStorage.setItem("todoTask", JSON.stringify(todoTask));
@@ -56,7 +54,6 @@ function Home(props) {
 
   const [todoList, setTodoList] = useState([]);
 
-  // let userData = JSON.parse(localStorage.getItem("userDetail"));
 
   function checkTask() {
     if (todos.todo === "") {
@@ -96,7 +93,6 @@ function Home(props) {
   }
   function deleteTodo(id) {
     setTodoList(todoList.filter((el, index) => index !== id));
-    //localStorage.removeItem("todoTask");
     localStorage.setItem("todoTask", JSON.stringify(todoList));
   }
 
@@ -111,11 +107,7 @@ function Home(props) {
   }
 
   let userData = JSON.parse(localStorage.getItem("userDetail"));
-  // useEffect(() => {
-  //   // setIsLogin(localStorage.setItem('isLogin',isLogin));
-  //    setAccess(JSON.parse(localStorage.getItem("access")));
-  // }, [logout]);
-
+  
   function handleProfile(e) {
     e.preventDefault();
     navigate("/profile");
@@ -132,11 +124,38 @@ function Home(props) {
 
     navigate("/");
   }
-  const useLogoutContext = [handleLogout];
+  
+
+  const completeTodo =  async(id) => {
+    var result = todoTask.map((todo) => {
+    // debugger;
+
+      if (todo.todo1 === id.todo1) {
+        todo.isCompleted = !todo.isCompleted;
+
+        console.log("completed", id.todo1, todo.todo1);
+      }
+      return todo;
+
+    });
+    
+
+   await setTodoList(result);
+    
+    localStorage.setItem("todoTask", JSON.stringify(todoList));
+  }
+  // }
+  // useEffect(() => {
+  //   // setIsLogin(localStorage.setItem('isLogin',isLogin));
+  //   // setAccess(JSON.parse(localStorage.getItem("access")));
+  //   localStorage.setItem("todoTask", JSON.stringify(todoList));
+
+  // },[completeTodo] );
 
   return (
     <>
-      <logoutContext.Provider value={useLogoutContext}>
+         
+
         <Header logout={handleLogout} profile={handleProfile} />
 
         <h1 className="welcome">Hello </h1>
@@ -179,13 +198,14 @@ function Home(props) {
               </thead>
               <tbody>
                 {todoTask &&
-                  todoTask.map((d, index) => {
+                  todoTask.map((todo, index) => {
                     return (
-                      <tr>
+                      <tr
+                      className={todo.isCompleted ? "complete" : "todo-row"}>
                         <td>{index + 1}</td>
-                        <td>{d.todo1}</td>
+                        <td onClick={()=>completeTodo(todo)}>{todo.todo1}</td>
                         <td>
-                          {moment(d.date1).format("DD-MMMM-YYYY |hh:mm:ss a")}
+                          {moment(todo.date1).format("DD-MMMM-YYYY |hh:mm:ss a")}
                         </td>
                         <td>
                           <span id="span1" onClick={() => deleteTodo(index)}>
@@ -199,7 +219,6 @@ function Home(props) {
             </table>
           </div>
         </div>
-      </logoutContext.Provider>
     </>
   );
 }

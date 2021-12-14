@@ -8,6 +8,10 @@ import { profileContext } from "../Components/Profile";
 const EditProfile = () => {
   // const [useProfileContext]=useContext(profileContext);
   const [isLogin, handleIsLogin] = useContext(authenticate);
+  const [id, setid] = useState();
+  
+  const [userLoginDetails, setUserLoginDetails] = useState({});
+  const [allLocalData, setAllLocalData] = useState([]);
 
   const [editedData, setEditedData] = useState({
     fname: "",
@@ -16,18 +20,38 @@ const EditProfile = () => {
     email: "",
     gender: "",
   });
+  
+  useEffect(() => {
+    setAllLocalData(JSON.parse(localStorage.getItem("auth")));
+    setEditedData(JSON.parse(localStorage.getItem("userDetail")));
+    setUserLoginDetails(JSON.parse(localStorage.getItem("userDetail")));
+  }, []);
   let navigate = useNavigate();
-  let userData = JSON.parse(localStorage.getItem("userDetail"));
-  useEffect(() => {}, []);
-
   const handleEdit = (e) => {
     setEditedData({ ...editedData, [e.target.name]: e.target.value });
   };
   const handleUpdate = (e) => {
     e.preventDefault();
     console.log(editedData);
-    navigate("/home");
-  };
+    // debugger;
+
+    allLocalData.forEach((el,index)=>{
+      if(el.phone===userLoginDetails.phone){
+        console.log(index)
+        setAllLocalData(allLocalData.splice(index,1,editedData));
+        localStorage.setItem("userDetail",JSON.stringify(editedData));
+      
+        localStorage.setItem("auth",JSON.stringify(allLocalData))
+      
+        setid(index);
+      }})
+  // if(id){
+   
+  // }
+  navigate("/home");
+
+};
+
 
   function routeHome() {
     navigate("/home");
@@ -57,7 +81,7 @@ const EditProfile = () => {
           <input
             name="fname"
             type="text"
-            defaultValue={userData.fname}
+            defaultValue={editedData.fname}
             onChange={handleEdit}
             placeholder="firstName"
             required
@@ -70,7 +94,7 @@ const EditProfile = () => {
           <input
             name="lname"
             type="text"
-            defaultValue={userData.lname}
+            defaultValue={editedData.lname}
             onChange={handleEdit}
             placeholder="lastName"
             required
@@ -83,7 +107,7 @@ const EditProfile = () => {
           <input
             name="phone"
             type="number"
-            defaultValue={userData.phone}
+            defaultValue={editedData.phone}
             onChange={handleEdit}
             placeholder="phoneNumber"
             required
@@ -96,7 +120,7 @@ const EditProfile = () => {
           <input
             name="email"
             type="email"
-            defaultValue={userData.email}
+            defaultValue={editedData.email}
             onChange={handleEdit}
             placeholder="email"
             required

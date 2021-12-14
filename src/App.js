@@ -25,7 +25,8 @@ function App() {
   const authenticateData = [isLogin, handleIsLogin];
   return (
     <>
-      <authenticate.Provider value={authenticateData}>
+    
+         <authenticate.Provider value={authenticateData}>
         <div className="container-fluid">
           <Routes>
             {access && <Route path="/" exact element={<Home />} />}
