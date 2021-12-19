@@ -46,7 +46,7 @@ function Header(props) {
               </button>
 
               <button
-                className="btn btn-outline-danger text-black bg-danger"
+                className="btn btn-outline-danger text-black bg-secondary"
                 onClick={props.home}
                 type="submit"
               >

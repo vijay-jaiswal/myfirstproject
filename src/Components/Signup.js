@@ -3,6 +3,8 @@ import "../App.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "./Input";
+import "../CSS/Signup.css";
+
 function Signup(props) {
   const [signUpData, setSignUpData] = useState({
     firstName: "",
@@ -114,7 +116,7 @@ function Signup(props) {
       val4 === "" &&
       val5 === ""
     ) {
-      handleSignup();
+      handleSign();
     } else {
       setError(val);
       setError1(val1);
@@ -128,7 +130,7 @@ function Signup(props) {
   }
 
   var auth = JSON.parse(localStorage.getItem("auth"));
-  const handleSignup = () => {
+  const handleSign = () => {
     if (auth === null) {
       auth = [];
     }
@@ -163,82 +165,100 @@ function Signup(props) {
   };
 
   return (
-    <div className="row">
-      <div className="signUp_Form">
-        <div className="SignUp">
-          <label>First Name:</label>
-          <Input
-            name={"firstName"}
-            type={"text"}
-            onChange={handleSignUp}
-            placeholder={"firstName"}
-            value={signUpData.firstName}
-          />
-          <p className=" text-danger">{error}</p>
-          <label>Last Name:</label>
-          <Input
-            name={"lastName"}
-            type={"text"}
-            onChange={handleSignUp}
-            placeholder={"lastName"}
-            value={signUpData.lastName}
-          />
-          <p className=" text-danger">{error1}</p>
-          <label>Contact Number:</label>
-          <Input
-            name={"phoneNumber"}
-            type={"number"}
-            onChange={handleSignUp}
-            placeholder={"phoneNumber"}
-            value={signUpData.phoneNumber}
-          />
+    <>
+      <br></br>
+      <div className="container" id="wrap">
+        <div className="row  justify-content-center">
+          <div className="col-md-6 col-md-offset-3 justify-content-center">
+            <legend>Sign Up</legend>
 
-          <p className=" text-danger">{error2}</p>
-          <label>Email Id:</label>
-          <Input
-            name={"email"}
-            type={"email"}
-            onChange={handleSignUp}
-            placeholder={"email"}
-            value={signUpData.email}
-          />
-          <p className=" text-danger">{error3}</p>
+            <h4>It's free and always will be.</h4>
+            <div className="row">
+              <div className="col-xs-6 col-md-6">
+                <Input
+                  name={"firstName"}
+                  type={"text"}
+                  onChange={handleSignUp}
+                  placeholder={"First Name"}
+                  value={signUpData.firstName}
+                />
+                <p className=" text-danger">{error}</p>
+              </div>
+              <div className="col-xs-6 col-md-6">
+                <Input
+                  name={"lastName"}
+                  type={"text"}
+                  onChange={handleSignUp}
+                  placeholder={"Last Name"}
+                  value={signUpData.lastName}
+                />
+                <p className=" text-danger">{error1}</p>
+              </div>
+            </div>
+            <Input
+              name={"phoneNumber"}
+              type={"number"}
+              onChange={handleSignUp}
+              placeholder={"Phone Number"}
+              value={signUpData.phoneNumber}
+            />
 
-          <div onChange={handleSignUp} value={signUpData.gender}>
-            Gender: <input type="radio" value="Male" name="gender" /> Male
-            <input type="radio" value="Female" name="gender" /> Female
-            <input type="radio" value="Other" name="gender" /> Other
+            <p className=" text-danger">{error2}</p>
+
+            <Input
+              name={"email"}
+              type={"email"}
+              onChange={handleSignUp}
+              placeholder={"Email"}
+              value={signUpData.email}
+            />
+            <p className=" text-danger">{error3}</p>
+            <Input
+              name={"password1"}
+              type={"Password"}
+              onChange={handleSignUp}
+              placeholder={"Password"}
+              value={signUpData.password1}
+            />
+
+            <p className=" text-danger">{error5}</p>
+
+            <Input
+              name={"password2"}
+              type={"Password"}
+              onChange={handleSignUp}
+              placeholder={"Confirm Password"}
+              value={signUpData.password2}
+            />
+
+            <div onChange={handleSignUp} value={signUpData.gender}>
+              Gender: <input type="radio" value="Male" name="gender" /> Male
+              <input type="radio" value="Female" name="gender" /> Female
+              <input type="radio" value="Other" name="gender" /> Other
+            </div>
+            <p className=" text-danger">{error4}</p>
+
+            <br />
+            <span className="help-block">
+              By clicking Create my account, you agree to our Terms and that you
+              have read our Data Use Policy, including our Cookie Use.
+            </span>
+
+            <button
+              className="btn btn-lg btn-primary btn-block signup-btn"
+              type="submit"
+              onClick={validation}
+            >
+              Create my account
+            </button>
+            <div className="redirectToLogin">
+              <p>already signup,click to login </p>
+              <Link to="/">LOGIN</Link>
+            </div>
           </div>
-          <p className=" text-danger">{error4}</p>
-          <label>Password:</label>
-          <Input
-            name={"password1"}
-            type={"Password"}
-            onChange={handleSignUp}
-            placeholder={"Password"}
-            value={signUpData.password1}
-          />
-
-          <p className=" text-danger">{error5}</p>
-
-          <label>Confirm Password:</label>
-          <Input
-            name={"password2"}
-            type={"Password"}
-            onChange={handleSignUp}
-            placeholder={"ConfirmPassword"}
-            value={signUpData.password2}
-          />
-
-          <button type="button" class="btn btn-primary" onClick={validation}>
-            signup
-          </button>
         </div>
-
-        <p>already signup,click to login </p>
-        <Link to="/">LOGIN</Link>
       </div>
-    </div>
+    </>
   );
 }
 

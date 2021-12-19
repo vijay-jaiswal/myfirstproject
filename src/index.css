@@ -1,21 +1,19 @@
 body {
   margin: 0;
+  padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(80, 189, 189);
-  
-  
-
-
-
+  background-color: skyblue;
+  height: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+.redirectToLogin {
+  right: 0;
+  align-content: center;
+  text-align: center;
 }
 
 .log-out {
@@ -23,52 +21,35 @@ code {
   width: auto;
   background-attachment: fixed;
 }
-.intro{
+.intro {
   text-align: center;
   padding: 0.5rem;
   margin-top: 6rem;
-font-style: italic;
-  
+  font-style: italic;
 }
 
 .profile {
   text-align: right;
   width: auto;
   background-attachment: fixed;
-  
 }
-
-.login_form,
-.signUp_Form
- {
-  text-align: center;
-  margin: 0 auto;
-  width: 30rem;
-  background-color: aliceblue;
-  height: fit-content;
-  padding: 0.5rem;
-  margin-top: 3rem;
-  
-}
-#full{
-  height:100vh;
+#full {
+  height: 100vh;
   background-color: rgb(80, 189, 189);
   width: 100%;
   margin: 0;
-
 }
-#full1{
+#full1 {
   margin: 0;
-  
-  background-color: rosybrown;
 
+  background-color: rosybrown;
 }
-.users{
-  
-  text-align:left;font-size:30px;
+.users {
+  text-align: left;
+  font-size: 30px;
   font-style: italic;
   color: red;
-  
+
   margin: 0 auto;
   width: 100%vh;
   background-color: aliceblue;
@@ -76,34 +57,34 @@ font-style: italic;
   padding: 0.5rem;
   margin-top: 3rem;
 }
-.welcome,.register{
+.welcome,
+.register {
   text-align: center;
 }
-.btn1{
-  background-color:blue;
+.btn1 {
+  background-color: blue;
   color: white;
-
 }
-.icon,.img{
+.icon,
+.img {
   width: 60px;
   height: 100px;
 }
-.img1{
+.img1 {
   width: 200px;
   height: 200px;
-  
 }
 
-input::placeholder ,#strt{
+input::placeholder,
+#strt {
   text-align: center;
-  
+
   color: blue;
 }
-.loginpage{
+.loginpage {
   text-align: center;
-
 }
-*{
+* {
   margin: 0;
   box-sizing: border-box;
 }

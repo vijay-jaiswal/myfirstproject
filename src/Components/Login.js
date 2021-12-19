@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authenticate } from "../App";
+import "../CSS/Login.css";
 
 import Input from "./Input";
 function Login(props) {
@@ -74,51 +75,82 @@ function Login(props) {
     }
   }
   return (
-    <div className="container-fluid  " id="full">
-      <div className="row  vh-100">
-        <div className="col  vh-100">
-          <h1 className="intro">
-            hi buddy,
-            <br />
-            vbook help u to manage your daily work{" "}
-          </h1>
-          <img src="draw22.png" alt="www.google.com"></img>
-        </div>
-        <div className="col-auto  vh-100  " id="full1">
-          <h1 id="strt"> Welcome to Vbook</h1>
-
-          <div className="login_form">
-            <div className="login">
-              <label>User id:</label>
-              <Input
-                name={"user"}
-                type={"text"}
-                onChange={setLoginData}
-                placeholder={"enter email or phone no."}
-                value={loginCredentials.user}
-              />
-              <p className=" text-danger">{error}</p>
-              <label>Password:</label>
-              <Input
-                name={"password"}
-                type={"password"}
-                onChange={setLoginData}
-                placeholder={"enter password"}
-                value={loginCredentials.password}
-              />
-              <p className=" text-danger">{error1}</p>
-
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={handleLogin}
-              >
-                login
-              </button>
+    <div className="container h-100">
+      <div className="d-flex justify-content-center h-100">
+        <div className="user_card">
+          <div className="d-flex justify-content-center">
+            <div className="brand_logo_container">
+              <img src="draw22.png" className="brand_logo" alt="Logo" />
             </div>
+          </div>
+          <div className="d-flex justify-content-center form_container">
+            <form>
+              <div className="input-group mb-3">
+                <div className="input-group-append">
+                  <span className="input-group-text">
+                    <i className="fas fa-user"></i>
+                  </span>
+                  <Input
+                    name={"user"}
+                    type={"text"}
+                    onChange={setLoginData}
+                    placeholder={"enter email or phone no."}
+                    value={loginCredentials.user}
+                  />
+                </div>
 
-            <p>please signup if you are not existing user </p>
-            <Link to="/signup">SIGNUP</Link>
+                <p className=" text-danger">{error}</p>
+              </div>
+              <div className="input-group mb-3 ">
+                <div className="input-group-append">
+                  <span className="input-group-text">
+                    <i className="fas fa-key"></i>
+                  </span>
+                  <Input
+                    name={"password"}
+                    type={"password"}
+                    onChange={setLoginData}
+                    placeholder={"enter password"}
+                    value={loginCredentials.password}
+                  />
+                </div>
+
+                <p className=" text-danger">{error1}</p>
+              </div>
+              <div className="form-group">
+                <div className="custom-control custom-checkbox">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="customControlInline"
+                  />
+                  <label
+                    className="custom-control-label"
+                    for="customControlInline"
+                  >
+                    Remember me
+                  </label>
+                </div>
+              </div>
+              <div className="d-flex justify-content-center mt-3 login_container">
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={handleLogin}
+                >
+                  login
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div className="mt-4">
+            <div className="d-flex justify-content-center links">
+              Don't have an account? <Link to="/signup">SIGNUP</Link>
+            </div>
+            <div className="d-flex justify-content-center links">
+              <a href="#">Forgot your password?</a>
+            </div>
           </div>
         </div>
       </div>

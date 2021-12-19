@@ -80,10 +80,12 @@ function TodoList() {
     });
   }
   function deleteTodo(id) {
-    const newTodo = todoTask.filter((el, index) => index !== id);
+    if (window.confirm("Do you want to delete!")) {
+      const newTodo = todoTask.filter((el, index) => index !== id);
 
-    setTodoList([...newTodo]);
-    localStorage.setItem("todoTask", JSON.stringify(newTodo));
+      setTodoList([...newTodo]);
+      localStorage.setItem("todoTask", JSON.stringify(newTodo));
+    }
   }
 
   const handleTodo = (e) => {
@@ -123,20 +125,26 @@ function TodoList() {
           required="true"
           onChange={handleTodo}
           value={todos.todo}
-          placeholder="add task"
+          placeholder="Write Task"
+          className="form-control-lg"
         />
         <input
           name="dateTime"
           type="dateTime-local"
           id="myDate"
+          className="form-control-lg"
           onChange={handleTodo}
           value={todos.dateTime}
         />
-
-        <button onClick={addTodo} className="addBtn">
-          Add
+        <br></br>
+        <button
+          className="btn btn-lg btn-primary  signup-btn"
+          type="submit"
+          onClick={addTodo}
+        >
+          Add Task
         </button>
-        <p className=" text-black">{error}</p>
+        <p className=" text-white">{error}</p>
 
         {}
         <div className="mt-4 bg-warning">

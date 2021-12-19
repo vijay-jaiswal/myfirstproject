@@ -1,9 +1,9 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
+import Input from "./Input";
 
 const EditProfile = () => {
-
   const [userLoginDetails, setUserLoginDetails] = useState({});
   const [allLocalData, setAllLocalData] = useState([]);
 
@@ -49,95 +49,97 @@ const EditProfile = () => {
     <div>
       <Header home={routeHome} />
 
-      <div className="signUp_Form">
-        <div className="SignUp">
-          <label>First Name:</label>
-          <br />
-          <input
-            name="fname"
-            type="text"
-            defaultValue={editedData.fname}
-            onChange={handleEdit}
-            placeholder="firstName"
-            required
-            contentEditable
-          />
-          <br />
+      <br></br>
+      <br></br>
+      <br></br>
 
-          <label>Last Name:</label>
-          <br />
-          <input
-            name="lname"
-            type="text"
-            defaultValue={editedData.lname}
-            onChange={handleEdit}
-            placeholder="lastName"
-            required
-            contentEditable
-          />
-          <br />
-
-          <label>Contact Number:</label>
-          <br />
-          <input
-            name="phone"
-            type="number"
-            defaultValue={editedData.phone}
-            onChange={handleEdit}
-            placeholder="phoneNumber"
-            required
-            contentEditable
-          />
-          <br />
-
-          <label>Email Id:</label>
-          <br />
-          <input
-            name="email"
-            type="email"
-            defaultValue={editedData.email}
-            onChange={handleEdit}
-            placeholder="email"
-            required
-            contentEditable
-          />
-          <br />
-          <div>
-            Gender:
-            <input
-              type="radio"
-              value="Male"
-              name="gender"
+      <div className="container-fluid" id="wrap">
+        <div className="row  justify-content-center">
+          <div className="col-md-6 col-md-offset-3 justify-content-center">
+            <legend>EDIT PROFILE</legend>
+            <div className="row">
+              <div className="col-xs-6 col-md-6">
+                {/* <label>name</label> */}
+                First Name:{" "}
+                <Input
+                  name={"fname"}
+                  type={"text"}
+                  onChange={handleEdit}
+                  placeholder={"First Name"}
+                  defaultValue={editedData.fname}
+                />
+                {/* <p className=" text-danger">{error}</p> */}
+              </div>
+              <div className="col-xs-6 col-md-6">
+                Last Name:
+                <Input
+                  name={"lname"}
+                  type={"text"}
+                  onChange={handleEdit}
+                  placeholder={"Last Name"}
+                  defaultValue={editedData.lname}
+                />
+                {/* <p className=" text-danger">{error1}</p> */}
+              </div>
+            </div>
+            Phone Number:
+            <Input
+              name={"phone"}
+              type={"number"}
               onChange={handleEdit}
-              checked={editedData.gender === "Male"}
-              contentEditable
+              placeholder={"Phone Number"}
+              defaultValue={editedData.phone}
             />
-            Male
-            <input
-              type="radio"
-              value="Female"
-              name="gender"
+            {/* <p className=" text-danger">{error2}</p> */}
+            Email Id:
+            <Input
+              name={"email"}
+              type={"email"}
               onChange={handleEdit}
-              checked={editedData.gender === "Female"}
-              contentEditable
+              placeholder={"Email"}
+              defaultValue={editedData.email}
             />
-            Female
-            <input
-              type="radio"
-              value="Other"
-              name="gender"
-              onChange={handleEdit}
-              checked={editedData.gender === "Other"}
-              contentEditable
-            />
-            Other
+            {/* <p className=" text-danger">{error3}</p> */}
+            <div>
+              Gender:
+              <input
+                type="radio"
+                value="Male"
+                name="gender"
+                onChange={handleEdit}
+                checked={editedData.gender === "Male"}
+                contentEditable
+              />
+              Male
+              <input
+                type="radio"
+                value="Female"
+                name="gender"
+                onChange={handleEdit}
+                checked={editedData.gender === "Female"}
+                contentEditable
+              />
+              Female
+              <input
+                type="radio"
+                value="Other"
+                name="gender"
+                onChange={handleEdit}
+                checked={editedData.gender === "Other"}
+                contentEditable
+              />
+              Other
+            </div>
+            {/* <p className=" text-danger">{error4}</p> */}
+            <br />
+            <button
+              className="btn btn-lg btn-primary btn-block signup-btn"
+              type="submit"
+              onClick={handleUpdate}
+            >
+              Update
+            </button>
           </div>
-          <br />
-          <br />
-          <button className="btn1" onClick={handleUpdate}>
-            Update
-          </button>
-          <br />
         </div>
       </div>
     </div>
