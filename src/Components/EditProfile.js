@@ -14,6 +14,95 @@ const EditProfile = () => {
     email: "",
     gender: "",
   });
+  function checkFName() {
+    var pp = /^[a-zA-Z]*$/;
+    if (editedData.fname === "") {
+      return " please write your first name\n";
+    } else if (!pp.test(editedData.fname)) {
+      return "only alphabet\n";
+    } else {
+      return "";
+    }
+  }
+  function checkLName() {
+    var pp = /^[a-zA-Z]*$/;
+    if (editedData.lname === "") {
+      return " please write your last name\n";
+    } else if (!pp.test(editedData.lname)) {
+      return "only alphabet\n";
+    } else {
+      return "";
+    }
+  }
+
+  function checkPhone() {
+    var pp = /^\d{10}$/;
+    if (editedData.phone === "") {
+      return " please write your contact number\n";
+    } else if (!pp.test(editedData.phone)) {
+      return " phone no. should be 10 digit \n";
+    } else {
+      return "";
+    }
+  }
+
+  function checkEmail() {
+    var pp = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/;
+    if (editedData.email === "") {
+      return " please write your email id\n";
+    } else if (!pp.test(editedData.email)) {
+      return " email is not valid \n";
+    } else {
+      return "";
+    }
+  }
+
+  function checkGender() {
+    if (editedData.gender === "") {
+      return " please select gender\n";
+    } else {
+      return "";
+    }
+  }
+  const [error, setError] = useState("");
+  const [error1, setError1] = useState("");
+  const [error2, setError2] = useState("");
+  const [error3, setError3] = useState("");
+  const [error4, setError4] = useState("");
+
+  function validation() {
+    var val = "";
+    var val1 = "";
+
+    var val2 = "";
+
+    var val3 = "";
+    var val4 = "";
+
+    val = checkFName();
+    val1 = checkLName();
+    val2 = checkPhone();
+    val3 = checkEmail();
+    val4 = checkGender();
+    console.log(editedData);
+    if (
+      val === "" &&
+      val1 === "" &&
+      val2 === "" &&
+      val3 === "" &&
+      val4 === ""
+    ) {
+      handleUpdate();
+    } else {
+      setError(val);
+      setError1(val1);
+      setError2(val2);
+      setError3(val3);
+      setError4(val4);
+
+      return false;
+    }
+  }
 
   useEffect(() => {
     setAllLocalData(JSON.parse(localStorage.getItem("auth")));
@@ -25,7 +114,6 @@ const EditProfile = () => {
     setEditedData({ ...editedData, [e.target.name]: e.target.value });
   };
   const handleUpdate = (e) => {
-    e.preventDefault();
     console.log(editedData);
 
     allLocalData.forEach((el, index) => {
@@ -59,8 +147,7 @@ const EditProfile = () => {
             <legend>EDIT PROFILE</legend>
             <div className="row">
               <div className="col-xs-6 col-md-6">
-                {/* <label>name</label> */}
-                First Name:{" "}
+                First Name:
                 <Input
                   name={"fname"}
                   type={"text"}
@@ -68,7 +155,7 @@ const EditProfile = () => {
                   placeholder={"First Name"}
                   defaultValue={editedData.fname}
                 />
-                {/* <p className=" text-danger">{error}</p> */}
+                <p className=" text-danger">{error}</p>
               </div>
               <div className="col-xs-6 col-md-6">
                 Last Name:
@@ -79,7 +166,7 @@ const EditProfile = () => {
                   placeholder={"Last Name"}
                   defaultValue={editedData.lname}
                 />
-                {/* <p className=" text-danger">{error1}</p> */}
+                <p className=" text-danger">{error1}</p>
               </div>
             </div>
             Phone Number:
@@ -90,7 +177,7 @@ const EditProfile = () => {
               placeholder={"Phone Number"}
               defaultValue={editedData.phone}
             />
-            {/* <p className=" text-danger">{error2}</p> */}
+            <p className=" text-danger">{error2}</p>
             Email Id:
             <Input
               name={"email"}
@@ -99,7 +186,7 @@ const EditProfile = () => {
               placeholder={"Email"}
               defaultValue={editedData.email}
             />
-            {/* <p className=" text-danger">{error3}</p> */}
+            <p className=" text-danger">{error3}</p>
             <div>
               Gender:
               <input
@@ -130,12 +217,12 @@ const EditProfile = () => {
               />
               Other
             </div>
-            {/* <p className=" text-danger">{error4}</p> */}
+            <p className=" text-danger">{error4}</p>
             <br />
             <button
               className="btn btn-lg btn-primary btn-block signup-btn"
               type="submit"
-              onClick={handleUpdate}
+              onClick={validation}
             >
               Update
             </button>
