@@ -2,9 +2,6 @@ import "./App.css";
 import Signup from "./Components/Signup";
 import Login from "./Components/Login";
 import React, { createContext, useState, useEffect } from "react";
-
-import Profile from "./Components/Profile";
-
 import { Route, Routes } from "react-router-dom";
 import Home from "./Components/Home";
 import EditProfile from "./Components/EditProfile";
@@ -23,15 +20,13 @@ function App() {
   const authenticateData = [isLogin, handleIsLogin];
   return (
     <>
-    
-         <authenticate.Provider value={authenticateData}>
+      <authenticate.Provider value={authenticateData}>
         <div className="container-fluid">
           <Routes>
             {access && <Route path="/" exact element={<Home />} />}
 
             {!access && <Route path="/" exact element={<Login />} />}
             {!access && <Route path="/signup" exact element={<Signup />} />}
-            {access && <Route path="/profile" exact element={<Profile />} />}
 
             {access && <Route path="/home" exact element={<Home />} />}
             {access && <Route path="/edit" exact element={<EditProfile />} />}

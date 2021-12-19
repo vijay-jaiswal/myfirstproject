@@ -6,15 +6,14 @@ import TodoList from "./TodoList";
 function Home(props) {
   let navigate = useNavigate();
 
-  function handleProfile(e) {
-    e.preventDefault();
-    navigate("/profile");
+  function routeEdit() {
+    navigate("/edit");
   }
   return (
     <>
-      <Header profile={handleProfile} />
+      <Header edit={routeEdit} />
 
-      <TodoList/>
+      <TodoList />
     </>
   );
 }

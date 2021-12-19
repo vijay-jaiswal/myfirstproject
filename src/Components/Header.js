@@ -27,37 +27,6 @@ function Header(props) {
         </nav>
       </div>
     );
-  } else if (Url === "/profile") {
-    return (
-      <div>
-        <nav class="navbar fixed-top navbar-light bg-primary">
-          <div className="container-fluid">
-            <h6 className="navbar-brand  justify-content-center text-uppercase align-content-center">
-              vbook
-            </h6>
-
-            <form className="d-flex">
-              <button
-                className="btn btn-outline-danger text-black bg-success"
-                onClick={props.edit}
-                type="submit"
-              >
-                EDIT
-              </button>
-
-              <button
-                className="btn btn-outline-danger text-black bg-secondary"
-                onClick={props.home}
-                type="submit"
-              >
-                HOME
-              </button>
-              <Logout></Logout>
-            </form>
-          </div>
-        </nav>
-      </div>
-    );
   } else {
     return (
       <div>
@@ -69,10 +38,10 @@ function Header(props) {
             <form className="d-flex">
               <button
                 className="btn btn-outline-danger text-black bg-success"
-                onClick={props.profile}
+                onClick={props.edit}
                 type="submit"
               >
-                PROFILE
+                EDIT
               </button>
 
               <Logout></Logout>
