@@ -1,6 +1,6 @@
 import "./App.css";
-import Signup from "./Components/Signup";
-import Login from "./Components/Login";
+import Signup from "./Components/login/Signup";
+import Login from "./Components/login/Login";
 import React, { createContext, useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Components/Home";

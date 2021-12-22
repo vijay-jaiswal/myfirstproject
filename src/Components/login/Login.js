@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authenticate } from "../App";
-import "../CSS/Login.css";
+import { authenticate } from "../../App";
+import "./Login.css";
 
-import Input from "./Input";
+import Input from "../Input";
+
 function Login(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
   const [loginCredentials, setLoginCredentials] = useState({
@@ -67,7 +68,7 @@ function Login(props) {
           navigate("home");
         }, 500);
       } else {
-        setError1("wrong password.");
+        setError1("wrong password,please type again");
       }
     } else {
       const d = `${loginCredentials.user} user not exist!`;

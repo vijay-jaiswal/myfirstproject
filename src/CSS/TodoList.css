@@ -9,10 +9,12 @@
   
   
   .header {
-    background-color: #f44336;
+    /* background-color: a; */
     padding: 30px 40px;
-    color: white;
+    /* color: white; */
     text-align:center;
+    width: 100%;
+    
   }
   .addBtn{
   height: 44px;
@@ -36,9 +38,10 @@
     height: 40px;
   }
   .complete{
-    background-color: blueviolet;
+    background-color: crimson;
+    
     text-decoration-line: line-through;
   }
   .todo-row{
-    background-color: cadetblue;
+    background-color: cornsilk;
   }

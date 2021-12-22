@@ -85,6 +85,7 @@ function TodoList() {
 
       setTodoList([...newTodo]);
       localStorage.setItem("todoTask", JSON.stringify(newTodo));
+      
     }
   }
 
@@ -113,7 +114,7 @@ function TodoList() {
 
   return (
     <>
-      <h1 className="welcome">Hello </h1>
+      {/* <h1 className="welcome">Hello</h1> */}
       <div className="log-out d-flex justify-content-between"></div>
 
       <div id="myDIV" className="header">
@@ -144,7 +145,7 @@ function TodoList() {
         >
           Add Task
         </button>
-        <p className=" text-white">{error}</p>
+        <p className=" text-danger">{error}</p>
 
         {}
         <div className="mt-4 bg-warning">

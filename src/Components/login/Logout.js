@@ -2,7 +2,7 @@ import React from "react";
 import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { authenticate } from "../App";
+import { authenticate } from "../../App";
 
 function Logout() {
   const [isLogin, handleIsLogin] = useContext(authenticate);

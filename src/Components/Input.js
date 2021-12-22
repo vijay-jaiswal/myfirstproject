@@ -8,10 +8,9 @@ export default function Input(props) {
         placeholder={props.placeholder}
         name={props.name}
         onChange={props.onChange}
-        //   value={props.value}
         className="form-control input-lg"
-        required
         defaultValue={props.defaultValue}
+        required
         contentEditable
       />
     </div>

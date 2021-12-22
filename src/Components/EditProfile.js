@@ -4,8 +4,9 @@ import Header from "./Header";
 import Input from "./Input";
 
 const EditProfile = () => {
-  const [userLoginDetails, setUserLoginDetails] = useState({});
+  // const [userLoginDetails, setUserLoginDetails] = useState({});
   const [allLocalData, setAllLocalData] = useState([]);
+  const  userLoginDetails=(JSON.parse(localStorage.getItem("userDetail")));
 
   const [editedData, setEditedData] = useState({
     fname: "",
@@ -107,7 +108,6 @@ const EditProfile = () => {
   useEffect(() => {
     setAllLocalData(JSON.parse(localStorage.getItem("auth")));
     setEditedData(JSON.parse(localStorage.getItem("userDetail")));
-    setUserLoginDetails(JSON.parse(localStorage.getItem("userDetail")));
   }, []);
   let navigate = useNavigate();
   const handleEdit = (e) => {
