@@ -5,100 +5,94 @@ import { useState } from "react";
 
 function TodoList() {
   const [todos, setTodos] = useState({
-    todo: "",
-    dateTime: "",
+    fields: {
+      todo: "",
+      dateTime: "",
+    },
+    errors: {},
   });
+
+  const [todoList, setTodoList] = useState([]);
+
+  const handleTodo = (e) => {
+    todos.fields[e.target.name] = e.target.value;
+    setTodos({ ...todos });
+    if (todos.errors[e.target.name]) {
+      todos.errors[e.target.name] = "";
+    }
+    validate();
+  };
+
+  const validate = () => {
+    let fields = todos.fields;
+    let errors = {};
+    let formIsValid = true;
+    if (!fields["todo"]) {
+      formIsValid = false;
+      errors["todo"] = "*please enter task.";
+    }
+    if (!fields["dateTime"]) {
+      formIsValid = false;
+      errors["dateTime"] = "*please select date and time.";
+    }
+    todos.errors = errors;
+    setTodos({ ...todos });
+    return formIsValid;
+  };
+
   var todoTask = JSON.parse(localStorage.getItem("todoTask"));
+
   const handleTodoTask = () => {
-    if (todoTask === null) {
-      todoTask = [
-        {
-          storedTodo: todos.todo,
-          storedDate: todos.dateTime,
-          isCompleted: false,
-        },
-      ];
-      localStorage.setItem("todoTask", JSON.stringify(todoTask));
-    } else {
-      const matchData = todoTask.filter((d) => {
-        if (d.storedTodo === todos.todo) {
-          return true;
-        }
-      });
-      if (matchData.length === 0) {
+    if (validate()) {
+      if (todoTask === null) {
         todoTask = [
-          ...todoTask,
           {
-            storedTodo: todos.todo,
-            storedDate: todos.dateTime,
+            storedTodo: todos.fields.todo,
+            storedDate: todos.fields.dateTime,
             isCompleted: false,
           },
         ];
         localStorage.setItem("todoTask", JSON.stringify(todoTask));
       } else {
-        setError(" no duplicate please");
+        const matchData = todoTask.filter((d) => {
+          if (d.storedTodo === todos.fields.todo) {
+            return true;
+          }
+        });
+        if (matchData.length === 0) {
+          todoTask = [
+            ...todoTask,
+            {
+              storedTodo: todos.fields.todo,
+              storedDate: todos.fields.dateTime,
+              isCompleted: false,
+            },
+          ];
+
+          localStorage.setItem("todoTask", JSON.stringify(todoTask));
+          setTodos({
+            fields: {
+              todo: "",
+              dateTime: "",
+            },
+            errors: {},
+          });
+        } else {
+          todos.errors["dateTime"] = "*no duplicate please";
+        }
       }
+      setTodoList(JSON.parse(localStorage.getItem("todoTask")));
     }
   };
 
-  const [todoList, setTodoList] = useState([]);
-
-  function checkTask() {
-    if (todos.todo === "") {
-      return " please add task\n";
-    } else {
-      return "";
-    }
-  }
-
-  function checkDate() {
-    if (todos.dateTime === "") {
-      return " please select date\n";
-    } else {
-      return "";
-    }
-  }
-  const [error, setError] = useState("");
-  function validation() {
-    var val = "";
-    val = checkTask();
-    val += checkDate();
-
-    if (val === "") {
-      console.log(todos);
-      handleTodoTask();
-
-      console.log(todoList);
-      setTodoList(JSON.parse(localStorage.getItem("todoTask")));
-    } else {
-      setError(val);
-      return false;
-    }
-    setTodos({
-      todo: "",
-      dateTime: "",
-    });
-  }
   function deleteTodo(id) {
     if (window.confirm("Do you want to delete!")) {
       const newTodo = todoTask.filter((el, index) => index !== id);
 
       setTodoList([...newTodo]);
       localStorage.setItem("todoTask", JSON.stringify(newTodo));
-      
     }
   }
-
-  const handleTodo = (e) => {
-    setTodos({ ...todos, [e.target.name]: e.target.value });
-  };
-
-  function addTodo(e) {
-    e.preventDefault();
-
-    validation();
-  }
-
   const completeTodo = (id) => {
     var result = todoTask.map((todo) => {
       if (todo.storedTodo === id.storedTodo) {
@@ -114,7 +108,6 @@ function TodoList() {
 
   return (
     <>
-      {/* <h1 className="welcome">Hello</h1> */}
       <div className="log-out d-flex justify-content-between"></div>
 
       <div id="myDIV" className="header">
@@ -125,7 +118,7 @@ function TodoList() {
           id="myInput"
           required="true"
           onChange={handleTodo}
-          value={todos.todo}
+          value={todos.fields.todo}
           placeholder="Write Task"
           className="form-control-lg"
         />
@@ -135,17 +128,24 @@ function TodoList() {
           id="myDate"
           className="form-control-lg"
           onChange={handleTodo}
-          value={todos.dateTime}
+          value={todos.fields.dateTime}
         />
         <br></br>
         <button
           className="btn btn-lg btn-primary  signup-btn"
           type="submit"
-          onClick={addTodo}
+          onClick={handleTodoTask}
         >
           Add Task
         </button>
-        <p className=" text-danger">{error}</p>
+
+        {todos.errors.todo && (
+          <p className=" text-danger">{todos.errors.todo}</p>
+        )}
+
+        {todos.errors.dateTime && (
+          <p className=" text-danger">{todos.errors.dateTime}</p>
+        )}
 
         {}
         <div className="mt-4 bg-warning">
