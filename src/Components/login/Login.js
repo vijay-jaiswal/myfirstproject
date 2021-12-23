@@ -8,12 +8,13 @@ import Input from "../Input";
 function Login(props) {
   const [isLogin, handleIsLogin] = useContext(authenticate);
   const [loginCredentials, setLoginCredentials] = useState({
-    user: "",
-    password: "",
+    fields: {
+      user: "",
+      password: "",
+    },
+    errors: {},
   });
   const [localData, setLocalData] = useState("");
-  const [error, setError] = useState("");
-  const [error1, setError1] = useState("");
 
   let navigate = useNavigate();
   useEffect(() => {
@@ -26,53 +27,69 @@ function Login(props) {
   }, []);
 
   const setLoginData = (e) => {
-    setLoginCredentials({
-      ...loginCredentials,
-      [e.target.name]: e.target.value,
-    });
+    loginCredentials.fields[e.target.name] = e.target.value;
+    setLoginCredentials({ ...loginCredentials });
+
+    if (loginCredentials.errors[e.target.name]) {
+      loginCredentials.errors[e.target.name] = "";
+    }
+    validate();
+  };
+  const validate = () => {
+    let fields = loginCredentials.fields;
+    let errors = {};
+    let formIsValid = true;
+    if (!fields["user"]) {
+      formIsValid = false;
+      errors["user"] = "*please enter user detail.";
+    }
+    if (!fields["password"]) {
+      formIsValid = false;
+      errors["password"] = "*please enter password.";
+    }
+    loginCredentials.errors = errors;
+    setLoginCredentials({ ...loginCredentials });
+    return formIsValid;
   };
 
   function handleLogin(e) {
-    e.preventDefault();
-    let userDetail = {};
-    if (loginCredentials.user.trim() === "") {
-      setError("please enter user detail");
-      return false;
-    }
-    if (loginCredentials.password.trim() === "") {
-      setError1("please enter password");
+    if (validate()) {
+      e.preventDefault();
+      let userDetail = {};
 
-      return false;
-    }
-    const matchData = localData.filter((d) => {
-      if (
-        d.email === loginCredentials.user ||
-        d.phoneNumber === loginCredentials.user
-      ) {
-        userDetail = d;
-        return true;
-      }
-    });
+      const matchData = localData.filter((d) => {
+        if (
+          d.email === loginCredentials.fields.user ||
+          d.phoneNumber === loginCredentials.fields.user
+        ) {
+          userDetail = d;
+          return true;
+        }
+      });
 
-    if (matchData.length !== 0) {
-      if (matchData[0].Password === loginCredentials.password) {
-        handleIsLogin();
-        localStorage.setItem("access", true);
-        localStorage.setItem("userDetail", JSON.stringify(userDetail));
+      if (matchData.length !== 0) {
+        if (matchData[0].Password === loginCredentials.fields.password) {
+          handleIsLogin();
+          localStorage.setItem("access", true);
+          localStorage.setItem("userDetail", JSON.stringify(userDetail));
 
-        setLoginCredentials({
-          user: "",
-          password: "",
-        });
-        setTimeout(() => {
-          navigate("home");
-        }, 500);
+          setLoginCredentials({
+            fields: {
+              user: "",
+              password: "",
+            },
+            errors: {},
+          });
+          setTimeout(() => {
+            navigate("home");
+          }, 500);
+        } else {
+          loginCredentials.errors["password"] =
+            "*wrong password,please type again";
+        }
       } else {
-        setError1("wrong password,please type again");
+        loginCredentials.errors["password"] = "*user detail not exist!";
       }
-    } else {
-      const d = `${loginCredentials.user} user not exist!`;
-      setError1(d);
     }
   }
   return (
@@ -96,11 +113,13 @@ function Login(props) {
                     type={"text"}
                     onChange={setLoginData}
                     placeholder={"enter email or phone no."}
-                    value={loginCredentials.user}
+                    value={loginCredentials.fields.user}
                   />
                 </div>
 
-                <p className=" text-danger">{error}</p>
+                {loginCredentials.errors.user && (
+                  <p className=" text-danger">{loginCredentials.errors.user}</p>
+                )}
               </div>
               <div className="input-group mb-3 ">
                 <div className="input-group-append">
@@ -112,11 +131,14 @@ function Login(props) {
                     type={"password"}
                     onChange={setLoginData}
                     placeholder={"enter password"}
-                    value={loginCredentials.password}
+                    value={loginCredentials.fields.password}
                   />
                 </div>
-
-                <p className=" text-danger">{error1}</p>
+                {loginCredentials.errors.password && (
+                  <p className=" text-danger">
+                    {loginCredentials.errors.password}
+                  </p>
+                )}
               </div>
               <div className="form-group">
                 <div className="custom-control custom-checkbox">
