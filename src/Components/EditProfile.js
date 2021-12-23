@@ -6,20 +6,20 @@ import Input from "./Input";
 const EditProfile = () => {
   // const [userLoginDetails, setUserLoginDetails] = useState({});
   const [allLocalData, setAllLocalData] = useState([]);
-  const  userLoginDetails=(JSON.parse(localStorage.getItem("userDetail")));
+  const userLoginDetails = JSON.parse(localStorage.getItem("userDetail"));
 
   const [editedData, setEditedData] = useState({
-    fname: "",
-    lname: "",
-    phone: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
     email: "",
     gender: "",
   });
   function checkFName() {
     var pp = /^[a-zA-Z]*$/;
-    if (editedData.fname === "") {
+    if (editedData.firstName === "") {
       return " please write your first name\n";
-    } else if (!pp.test(editedData.fname)) {
+    } else if (!pp.test(editedData.firstName)) {
       return "only alphabet\n";
     } else {
       return "";
@@ -27,9 +27,9 @@ const EditProfile = () => {
   }
   function checkLName() {
     var pp = /^[a-zA-Z]*$/;
-    if (editedData.lname === "") {
+    if (editedData.lastName === "") {
       return " please write your last name\n";
-    } else if (!pp.test(editedData.lname)) {
+    } else if (!pp.test(editedData.lastName)) {
       return "only alphabet\n";
     } else {
       return "";
@@ -38,9 +38,9 @@ const EditProfile = () => {
 
   function checkPhone() {
     var pp = /^\d{10}$/;
-    if (editedData.phone === "") {
+    if (editedData.phoneNumber === "") {
       return " please write your contact number\n";
-    } else if (!pp.test(editedData.phone)) {
+    } else if (!pp.test(editedData.phoneNumber)) {
       return " phone no. should be 10 digit \n";
     } else {
       return "";
@@ -117,7 +117,7 @@ const EditProfile = () => {
     console.log(editedData);
 
     allLocalData.forEach((el, index) => {
-      if (el.phone === userLoginDetails.phone) {
+      if (el.phoneNumber === userLoginDetails.phoneNumber) {
         console.log(index);
         setAllLocalData(allLocalData.splice(index, 1, editedData));
         localStorage.setItem("userDetail", JSON.stringify(editedData));
@@ -149,33 +149,33 @@ const EditProfile = () => {
               <div className="col-xs-6 col-md-6">
                 First Name:
                 <Input
-                  name={"fname"}
+                  name={"firstName"}
                   type={"text"}
                   onChange={handleEdit}
                   placeholder={"First Name"}
-                  defaultValue={editedData.fname}
+                  value={editedData.firstName}
                 />
                 <p className=" text-danger">{error}</p>
               </div>
               <div className="col-xs-6 col-md-6">
                 Last Name:
                 <Input
-                  name={"lname"}
+                  name={"lastName"}
                   type={"text"}
                   onChange={handleEdit}
                   placeholder={"Last Name"}
-                  defaultValue={editedData.lname}
+                  value={editedData.lastName}
                 />
                 <p className=" text-danger">{error1}</p>
               </div>
             </div>
             Phone Number:
             <Input
-              name={"phone"}
+              name={"phoneNumber"}
               type={"number"}
               onChange={handleEdit}
               placeholder={"Phone Number"}
-              defaultValue={editedData.phone}
+              value={editedData.phoneNumber}
             />
             <p className=" text-danger">{error2}</p>
             Email Id:
@@ -184,7 +184,7 @@ const EditProfile = () => {
               type={"email"}
               onChange={handleEdit}
               placeholder={"Email"}
-              defaultValue={editedData.email}
+              value={editedData.email}
             />
             <p className=" text-danger">{error3}</p>
             <div>

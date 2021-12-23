@@ -47,7 +47,7 @@ function Login(props) {
     const matchData = localData.filter((d) => {
       if (
         d.email === loginCredentials.user ||
-        d.phone === loginCredentials.user
+        d.phoneNumber === loginCredentials.user
       ) {
         userDetail = d;
         return true;

@@ -42,9 +42,9 @@ function Signup(props) {
         auth = [
           ...auth,
           {
-            fname: signUpData.fields.firstName,
-            lname: signUpData.fields.lastName,
-            phone: signUpData.fields.phoneNumber,
+            firstName: signUpData.fields.firstName,
+            lastName: signUpData.fields.lastName,
+            phoneNumber: signUpData.fields.phoneNumber,
             email: signUpData.fields.email,
             gender: signUpData.fields.gender,
             Password: signUpData.fields.password1,
@@ -171,7 +171,7 @@ function Signup(props) {
                   type={"text"}
                   onChange={handleSignUp}
                   placeholder={"First Name"}
-                  value={signUpData.firstName}
+                  value={signUpData.fields.firstName}
                 />
                 {signUpData.errors.firstName && (
                   <p className=" text-danger">{signUpData.errors.firstName}</p>
@@ -183,7 +183,7 @@ function Signup(props) {
                   type={"text"}
                   onChange={handleSignUp}
                   placeholder={"Last Name"}
-                  value={signUpData.lastName}
+                  value={signUpData.fields.lastName}
                 />
                 {signUpData.errors.lastName && (
                   <p className=" text-danger">{signUpData.errors.lastName}</p>
@@ -195,7 +195,7 @@ function Signup(props) {
               type={"number"}
               onChange={handleSignUp}
               placeholder={"Phone Number"}
-              value={signUpData.phoneNumber}
+              value={signUpData.fields.phoneNumber}
             />
             {signUpData.errors.phoneNumber && (
               <p className=" text-danger">{signUpData.errors.phoneNumber}</p>
@@ -206,7 +206,7 @@ function Signup(props) {
               type={"email"}
               onChange={handleSignUp}
               placeholder={"Email"}
-              value={signUpData.email}
+              value={signUpData.fields.email}
             />
             {signUpData.errors.email && (
               <p className=" text-danger">{signUpData.errors.email}</p>
@@ -217,7 +217,7 @@ function Signup(props) {
               type={"Password"}
               onChange={handleSignUp}
               placeholder={"Password"}
-              value={signUpData.password1}
+              value={signUpData.fields.password1}
             />
 
             {signUpData.errors.password1 && (
@@ -229,13 +229,13 @@ function Signup(props) {
               type={"Password"}
               onChange={handleSignUp}
               placeholder={"Confirm Password"}
-              value={signUpData.password2}
+              value={signUpData.fields.password2}
             />
             {signUpData.errors.password2 && (
               <p className=" text-danger">{signUpData.errors.password2}</p>
             )}
 
-            <div onChange={handleSignUp} value={signUpData.gender}>
+            <div onChange={handleSignUp} value={signUpData.fields.gender}>
               Gender: <input type="radio" value="Male" name="gender" /> Male
               <input type="radio" value="Female" name="gender" /> Female
               <input type="radio" value="Other" name="gender" /> Other
