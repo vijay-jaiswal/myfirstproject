@@ -1,7 +1,17 @@
 import React from "react";
 import "../CSS/TodoList.css";
 import moment from "moment";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 
 function TodoList() {
   const [todos, setTodos] = useState({
@@ -11,8 +21,6 @@ function TodoList() {
     },
     errors: {},
   });
-
-  const [todoList, setTodoList] = useState([]);
 
   const handleTodo = (e) => {
     todos.fields[e.target.name] = e.target.value;
@@ -40,19 +48,26 @@ function TodoList() {
     return formIsValid;
   };
 
-  var todoTask = JSON.parse(localStorage.getItem("todoTask"));
+  const [todoTask, setTodoTask] = useState([]);
+  const listCollectionRef = collection(db, "todoTask");
+
+  useEffect(() => {
+    const getlist = async () => {
+      const data = await getDocs(listCollectionRef);
+      setTodoTask(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getlist();
+  });
 
   const handleTodoTask = () => {
     if (validate()) {
       if (todoTask === null) {
-        todoTask = [
-          {
-            storedTodo: todos.fields.todo,
-            storedDate: todos.fields.dateTime,
-            isCompleted: false,
-          },
-        ];
-        localStorage.setItem("todoTask", JSON.stringify(todoTask));
+        addDoc(listCollectionRef, {
+          storedTodo: todos.fields.todo,
+          storedDate: todos.fields.dateTime,
+          isCompleted: false,
+        });
       } else {
         const matchData = todoTask.filter((d) => {
           if (d.storedTodo === todos.fields.todo) {
@@ -60,16 +75,12 @@ function TodoList() {
           }
         });
         if (matchData.length === 0) {
-          todoTask = [
-            ...todoTask,
-            {
-              storedTodo: todos.fields.todo,
-              storedDate: todos.fields.dateTime,
-              isCompleted: false,
-            },
-          ];
+          addDoc(listCollectionRef, {
+            storedTodo: todos.fields.todo,
+            storedDate: todos.fields.dateTime,
+            isCompleted: false,
+          });
 
-          localStorage.setItem("todoTask", JSON.stringify(todoTask));
           setTodos({
             fields: {
               todo: "",
@@ -81,29 +92,17 @@ function TodoList() {
           todos.errors["dateTime"] = "*no duplicate please";
         }
       }
-      setTodoList(JSON.parse(localStorage.getItem("todoTask")));
     }
   };
 
-  function deleteTodo(id) {
-    if (window.confirm("Do you want to delete!")) {
-      const newTodo = todoTask.filter((el, index) => index !== id);
-
-      setTodoList([...newTodo]);
-      localStorage.setItem("todoTask", JSON.stringify(newTodo));
-    }
-  }
-  const completeTodo = (id) => {
-    var result = todoTask.map((todo) => {
-      if (todo.storedTodo === id.storedTodo) {
-        todo.isCompleted = !todo.isCompleted;
-      }
-      return todo;
-    });
-
-    setTodoList([...result]);
-
-    localStorage.setItem("todoTask", JSON.stringify(result));
+  const deleteTodo = async (id) => {
+    const userDoc = doc(db, "todoTask", id);
+    await deleteDoc(userDoc);
+  };
+  const completeTodo = async (id, isCompleted) => {
+    const userDoc = doc(db, "todoTask", id);
+    const newFields = { isCompleted: !isCompleted };
+    await updateDoc(userDoc, newFields);
   };
 
   return (
@@ -167,7 +166,10 @@ function TodoList() {
                       key={index}
                     >
                       <td>{index + 1}</td>
-                      <td onClick={() => completeTodo(todo)} key={index}>
+                      <td
+                        onClick={() => completeTodo(todo.id, todo.isCompleted)}
+                        key={index}
+                      >
                         {todo.storedTodo}
                       </td>
                       <td>
@@ -176,7 +178,7 @@ function TodoList() {
                         )}
                       </td>
                       <td>
-                        <span id="span1" onClick={() => deleteTodo(index)}>
+                        <span id="span1" onClick={() => deleteTodo(todo.id)}>
                           X
                         </span>
                       </td>
