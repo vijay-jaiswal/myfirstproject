@@ -1,9 +1,19 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Input from "../Input";
 
 import "./Signup.css";
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+
 function Signup(props) {
   const [signUpData, setSignUpData] = useState({
     fields: {
@@ -27,30 +37,35 @@ function Signup(props) {
     validate();
   };
   let navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const listCollectionRef = collection(db, "users");
 
-  var auth = JSON.parse(localStorage.getItem("auth"));
+  useEffect(() => {
+    const getusers = async () => {
+      const data = await getDocs(listCollectionRef);
+      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getusers();
+  });
 
   const handleSign = (e) => {
     e.preventDefault();
 
     if (validate()) {
-      if (auth === null) {
-        auth = [];
+      if (users === null) {
+        users = [];
       }
 
       if (signUpData.fields.password1 === signUpData.fields.password2) {
-        auth = [
-          ...auth,
-          {
-            firstName: signUpData.fields.firstName,
-            lastName: signUpData.fields.lastName,
-            phoneNumber: signUpData.fields.phoneNumber,
-            email: signUpData.fields.email,
-            gender: signUpData.fields.gender,
-            Password: signUpData.fields.password1,
-          },
-        ];
-        localStorage.setItem("auth", JSON.stringify(auth));
+        addDoc(listCollectionRef, {
+          firstName: signUpData.fields.firstName,
+          lastName: signUpData.fields.lastName,
+          phoneNumber: signUpData.fields.phoneNumber,
+          email: signUpData.fields.email,
+          gender: signUpData.fields.gender,
+          Password: signUpData.fields.password1,
+        });
         navigate("/");
         setSignUpData({
           fields: {

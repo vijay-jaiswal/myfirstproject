@@ -1,24 +1,65 @@
 import React from "react";
 import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { authenticate } from "../../App";
+import { useState, useEffect } from "react";
 
+import { db } from "../firebase-config";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 function Logout() {
   const [isLogin, handleIsLogin] = useContext(authenticate);
-  let navigate = useNavigate();
+  const accessFirebase = collection(db, "access");
+  const userDetailFirebase = collection(db, "userDetail");
+
+  const [loginDetail, setLoginDetail] = useState([]);
+  const [access, setAccess] = useState([]);
+
+  useEffect(() => {
+    const getlist = async () => {
+      const data = await getDocs(accessFirebase);
+      setAccess(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getlist();
+  });
+
+  useEffect(() => {
+    const getlist = async () => {
+      const data = await getDocs(userDetailFirebase);
+      setLoginDetail(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getlist();
+  });
+
+  const deleteTodo = async (id) => {
+    const userDoc = doc(db, "userDetail", id);
+    await deleteDoc(userDoc);
+  };
+  const deleteAccess = async (id) => {
+    const userDoc = doc(db, "access", id);
+    await deleteDoc(userDoc);
+  };
 
   function handleLogout(e) {
-    e.preventDefault();
-    localStorage.removeItem("userLogin");
-    localStorage.removeItem("access");
-    handleIsLogin();
-
-    localStorage.removeItem("userDetail");
-
     swal("successfully logout!", "You clicked at logout!", "success");
 
-    navigate("/");
+    e.preventDefault();
+    {
+      loginDetail &&
+        loginDetail.map((todo, index) => {
+          deleteTodo(todo.id);
+        });
+    }
+    {
+      access &&
+        access.map((todo, index) => {
+          deleteAccess(todo.id);
+        });
+    }
+
+    localStorage.removeItem("access");
+    handleIsLogin();
   }
   return (
     <div>

@@ -2,7 +2,15 @@ import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authenticate } from "../../App";
 import "./Login.css";
-
+import { db } from "../firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 import Input from "../Input";
 
 function Login(props) {
@@ -17,14 +25,27 @@ function Login(props) {
   const [localData, setLocalData] = useState("");
 
   let navigate = useNavigate();
+  const [data1, setData1] = useState([]);
+  const listCollectionRef = collection(db, "users");
+  const access1 = collection(db, "access");
+  const userDetail1 = collection(db, "userDetail");
+
   useEffect(() => {
-    let data = JSON.parse(localStorage.getItem("auth"));
-    if (data && data.length > 0) {
-      setLocalData(data);
+    const getusers = async () => {
+      const data = await getDocs(listCollectionRef);
+      setData1(data.docs.map((doc) => ({ ...doc.data() })));
+    };
+
+    getusers();
+  });
+
+  useEffect(() => {
+    if (data1 && data1.length > 0) {
+      setLocalData(data1);
     } else {
       setLocalData([]);
     }
-  }, []);
+  });
 
   const setLoginData = (e) => {
     loginCredentials.fields[e.target.name] = e.target.value;
@@ -69,10 +90,13 @@ function Login(props) {
 
       if (matchData.length !== 0) {
         if (matchData[0].Password === loginCredentials.fields.password) {
-          handleIsLogin();
           localStorage.setItem("access", true);
-          localStorage.setItem("userDetail", JSON.stringify(userDetail));
-
+          addDoc(access1, {
+            access: true,
+          });
+          addDoc(userDetail1, {
+            userDetail,
+          });
           setLoginCredentials({
             fields: {
               user: "",
@@ -80,6 +104,8 @@ function Login(props) {
             },
             errors: {},
           });
+          handleIsLogin();
+
           setTimeout(() => {
             navigate("home");
           }, 500);
