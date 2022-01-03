@@ -58,7 +58,7 @@ function TodoList() {
     };
 
     getlist();
-  });
+  },[listCollectionRef]);
 
   const handleTodoTask = () => {
     if (validate()) {

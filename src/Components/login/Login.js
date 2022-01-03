@@ -7,9 +7,6 @@ import {
   collection,
   getDocs,
   addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
 } from "firebase/firestore";
 import Input from "../Input";
 
@@ -37,7 +34,7 @@ function Login(props) {
     };
 
     getusers();
-  });
+  },[listCollectionRef]);
 
   useEffect(() => {
     if (data1 && data1.length > 0) {
@@ -45,7 +42,7 @@ function Login(props) {
     } else {
       setLocalData([]);
     }
-  });
+  },[data1]);
 
   const setLoginData = (e) => {
     loginCredentials.fields[e.target.name] = e.target.value;

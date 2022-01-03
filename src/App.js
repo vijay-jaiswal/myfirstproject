@@ -5,6 +5,8 @@ import React, { createContext, useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./Components/Home";
 import EditProfile from "./Components/EditProfile";
+import { db } from "./Components/firebase-config";
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const authenticate = createContext();
 function App() {
@@ -13,9 +15,30 @@ function App() {
     setIsLogin(!isLogin);
   };
   const [access, setAccess] = useState(false);
+  const accessFirebase = collection(db, "access");
+  const [users, setUsers] = useState([]);
+
   useEffect(() => {
-    setAccess(JSON.parse(localStorage.getItem("access")));
-  }, [isLogin]);
+    const getlist = async () => {
+      const data = await getDocs(accessFirebase);
+      setUsers(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    
+    getlist();
+  },);
+
+
+  useEffect(() => {
+    // setAccess(JSON.parse(localStorage.getItem("access")));
+    if (users && users.length > 0) {
+    users.map((d)=>{
+      setAccess(d.access);
+    }
+    )}
+    else{
+      setAccess(false);
+    }
+  },);
 
   const authenticateData = [isLogin, handleIsLogin];
   return (

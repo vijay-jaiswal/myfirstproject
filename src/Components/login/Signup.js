@@ -5,14 +5,7 @@ import Input from "../Input";
 
 import "./Signup.css";
 import { db } from "../firebase-config";
-import {
-  collection,
-  getDocs,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 
 function Signup(props) {
   const [signUpData, setSignUpData] = useState({
@@ -47,14 +40,15 @@ function Signup(props) {
     };
 
     getusers();
-  });
+  }, [listCollectionRef]);
 
   const handleSign = (e) => {
     e.preventDefault();
 
     if (validate()) {
       if (users === null) {
-        users = [];
+        // users = [];
+        setUsers([]);
       }
 
       if (signUpData.fields.password1 === signUpData.fields.password2) {
