@@ -3,10 +3,31 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Input from "./Input";
 
+import { db } from "./firebase-config";
+import {
+  collection,
+  getDocs,
+  addDoc,
+} from "firebase/firestore";
+
 const EditProfile = () => {
-  // const [userLoginDetails, setUserLoginDetails] = useState({});
+  const [userLoginDetails, setUserLoginDetails] = useState({});
   const [allLocalData, setAllLocalData] = useState([]);
-  const userLoginDetails = JSON.parse(localStorage.getItem("userDetail"));
+  const listCollectionRef = collection(db, "users");
+  const userDetail1 = collection(db, "userDetail");
+
+  useEffect(() => {
+    const getlist = async () => {
+      const data = await getDocs(userDetail1);
+      setUserLoginDetails(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+    };
+
+    getlist();
+  }, [userDetail1]);
+
+  // const [todoTask, setTodoTask] = useState([]);
 
   const [editedData, setEditedData] = useState({
     firstName: "",
@@ -106,9 +127,23 @@ const EditProfile = () => {
   }
 
   useEffect(() => {
-    setAllLocalData(JSON.parse(localStorage.getItem("auth")));
-    setEditedData(JSON.parse(localStorage.getItem("userDetail")));
-  }, []);
+    const getlist = async () => {
+      const data = await getDocs(userDetail1);
+      setEditedData(data.docs.map((doc) => ({ ...doc.data() })));
+    };
+
+    getlist();
+  }, [userDetail1]);
+
+  useEffect(() => {
+    const getlist = async () => {
+      const data = await getDocs(listCollectionRef);
+      setAllLocalData(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+    getlist();
+  }, [listCollectionRef]);
+
   let navigate = useNavigate();
   const handleEdit = (e) => {
     setEditedData({ ...editedData, [e.target.name]: e.target.value });
@@ -120,9 +155,12 @@ const EditProfile = () => {
       if (el.phoneNumber === userLoginDetails.phoneNumber) {
         console.log(index);
         setAllLocalData(allLocalData.splice(index, 1, editedData));
-        localStorage.setItem("userDetail", JSON.stringify(editedData));
-
-        localStorage.setItem("auth", JSON.stringify(allLocalData));
+        addDoc(userDetail1, {
+          editedData,
+        });
+        addDoc(listCollectionRef, {
+          allLocalData,
+        });
       }
     });
 
@@ -132,7 +170,6 @@ const EditProfile = () => {
   function routeHome() {
     navigate("/home");
   }
-
   return (
     <div>
       <Header home={routeHome} />
@@ -153,7 +190,7 @@ const EditProfile = () => {
                   type={"text"}
                   onChange={handleEdit}
                   placeholder={"First Name"}
-                  value={editedData.firstName}
+                  value={editedData}
                 />
                 <p className=" text-danger">{error}</p>
               </div>
@@ -229,6 +266,9 @@ const EditProfile = () => {
           </div>
         </div>
       </div>
+      {/* ); */}
+      {/* }) */}
+      {/* } */}
     </div>
   );
 };

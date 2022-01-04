@@ -3,11 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { authenticate } from "../../App";
 import "./Login.css";
 import { db } from "../firebase-config";
-import {
-  collection,
-  getDocs,
-  addDoc,
-} from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import Input from "../Input";
 
 function Login(props) {
@@ -22,27 +18,27 @@ function Login(props) {
   const [localData, setLocalData] = useState("");
 
   let navigate = useNavigate();
-  const [data1, setData1] = useState([]);
+  const [users, setUsers] = useState([]);
   const listCollectionRef = collection(db, "users");
-  const access1 = collection(db, "access");
-  const userDetail1 = collection(db, "userDetail");
+  const accessFirebase = collection(db, "access");
+  const userDetailFirebase = collection(db, "userDetail");
 
   useEffect(() => {
     const getusers = async () => {
       const data = await getDocs(listCollectionRef);
-      setData1(data.docs.map((doc) => ({ ...doc.data() })));
+      setUsers(data.docs.map((doc) => ({ ...doc.data() })));
     };
 
     getusers();
-  },[listCollectionRef]);
+  }, [listCollectionRef]);
 
   useEffect(() => {
-    if (data1 && data1.length > 0) {
-      setLocalData(data1);
+    if (users && users.length > 0) {
+      setLocalData(users);
     } else {
       setLocalData([]);
     }
-  },[data1]);
+  }, [users]);
 
   const setLoginData = (e) => {
     loginCredentials.fields[e.target.name] = e.target.value;
@@ -75,12 +71,12 @@ function Login(props) {
       e.preventDefault();
       let userDetail = {};
 
-      const matchData = localData.filter((d) => {
+      const matchData = localData.filter((elm) => {
         if (
-          d.email === loginCredentials.fields.user ||
-          d.phoneNumber === loginCredentials.fields.user
+          elm.email === loginCredentials.fields.user ||
+          elm.phoneNumber === loginCredentials.fields.user
         ) {
-          userDetail = d;
+          userDetail = elm;
           return true;
         }
       });
@@ -88,10 +84,10 @@ function Login(props) {
       if (matchData.length !== 0) {
         if (matchData[0].Password === loginCredentials.fields.password) {
           localStorage.setItem("access", true);
-          addDoc(access1, {
+          addDoc(accessFirebase, {
             access: true,
           });
-          addDoc(userDetail1, {
+          addDoc(userDetailFirebase, {
             userDetail,
           });
           setLoginCredentials({

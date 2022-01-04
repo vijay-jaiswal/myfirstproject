@@ -47,7 +47,6 @@ function Signup(props) {
 
     if (validate()) {
       if (users === null) {
-        // users = [];
         setUsers([]);
       }
 

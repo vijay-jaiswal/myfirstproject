@@ -5,7 +5,12 @@ import { authenticate } from "../../App";
 import { useState, useEffect } from "react";
 
 import { db } from "../firebase-config";
-import { collection, getDocs, deleteDoc, updateDoc,doc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
 function Logout() {
   const [isLogin, handleIsLogin] = useContext(authenticate);
   const accessFirebase = collection(db, "access");
@@ -21,7 +26,7 @@ function Logout() {
     };
 
     getlist();
-  },[accessFirebase]);
+  }, [accessFirebase]);
 
   useEffect(() => {
     const getlist = async () => {
@@ -30,7 +35,7 @@ function Logout() {
     };
 
     getlist();
-  },[userDetailFirebase]);
+  }, [userDetailFirebase]);
 
   const deleteTodo = async (id) => {
     const userDoc = doc(db, "userDetail", id);
@@ -40,11 +45,6 @@ function Logout() {
     const userDoc = doc(db, "access", id);
     await deleteDoc(userDoc);
   };
-  // const deleteAccess = async (id,access) => {
-  //   const userDoc = doc(db, "access", id);
-  //   const newFields = { access: !true };
-  //   await updateDoc(userDoc, newFields);
-  // };
 
   function handleLogout(e) {
     swal("successfully logout!", "You clicked at logout!", "success");
@@ -52,14 +52,14 @@ function Logout() {
     e.preventDefault();
     {
       loginDetail &&
-        loginDetail.map((todo) => {
-          deleteTodo(todo.id);
+        loginDetail.map((elm) => {
+          deleteTodo(elm.id);
         });
     }
     {
       access &&
-        access.map((todo) => {
-          deleteAccess(todo.id);
+        access.map((elm) => {
+          deleteAccess(elm.id);
         });
     }
 
