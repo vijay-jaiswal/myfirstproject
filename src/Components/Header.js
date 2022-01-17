@@ -7,7 +7,7 @@ function Header(props) {
   if (Url === "/edit") {
     return (
       <div>
-        <nav class="navbar fixed-top navbar-light bg-primary">
+        <nav className="navbar fixed-top navbar-light bg-primary">
           <div className="container-fluid">
             <h6 className="navbar-brand  justify-content-center text-uppercase align-content-center">
               vbook
@@ -17,7 +17,7 @@ function Header(props) {
               <button
                 className="btn btn-outline-danger text-black bg-success"
                 onClick={props.home}
-                type="submit"
+                type="button"
               >
                 HOME
               </button>
@@ -30,7 +30,7 @@ function Header(props) {
   } else {
     return (
       <div>
-        <nav class="navbar fixed-top navbar-light bg-primary">
+        <nav className="navbar fixed-top navbar-light bg-primary">
           <div className="container-fluid">
             <h6 className="navbar-brand  justify-content-center text-uppercase align-content-center">
               vbook
@@ -39,7 +39,7 @@ function Header(props) {
               <button
                 className="btn btn-outline-danger text-black bg-success"
                 onClick={props.edit}
-                type="submit"
+                type="button"
               >
                 EDIT
               </button>

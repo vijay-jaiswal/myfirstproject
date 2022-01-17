@@ -2,8 +2,7 @@ import React from "react";
 import "../CSS/TodoList.css";
 import moment from "moment";
 import { useState, useEffect } from "react";
-
-import { db } from "./firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
 import {
   collection,
   getDocs,
@@ -12,8 +11,12 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
+import { db, auth } from "./firebase-config";
 
 function TodoList() {
+  const [user, setUser] = useState(null);
+  const [todoTask, setTodoTask] = useState([]);
+
   const [todos, setTodos] = useState({
     fields: {
       todo: "",
@@ -28,58 +31,67 @@ function TodoList() {
     if (todos.errors[e.target.name]) {
       todos.errors[e.target.name] = "";
     }
-    validate();
+    validate(e.target.name);
   };
-
-  const validate = () => {
+  const validate = (type) => {
     let fields = todos.fields;
     let errors = {};
     let formIsValid = true;
-    if (!fields["todo"]) {
-      formIsValid = false;
-      errors["todo"] = "*please enter task.";
-    }
-    if (!fields["dateTime"]) {
-      formIsValid = false;
-      errors["dateTime"] = "*please select date and time.";
+    switch (type) {
+      case "todo":
+        if (!fields["todo"]) {
+          formIsValid = false;
+          errors["todo"] = "*please enter task.";
+        }
+        break;
+      case "dateTime":
+        if (!fields["dateTime"]) {
+          formIsValid = false;
+          errors["dateTime"] = "*please select date and time.";
+        }
+        break;
+      case "all":
+        Object.keys(fields).forEach((key) => {
+          if (fields[key].trim() === "") {
+            formIsValid = false;
+            errors[key] = "please enter value";
+          }
+        });
+        break;
+      default:
+        break;
     }
     todos.errors = errors;
     setTodos({ ...todos });
     return formIsValid;
   };
 
-  const [todoTask, setTodoTask] = useState([]);
-  const listCollectionRef = collection(db, "todoTask");
-
-  useEffect(() => {
-    const getlist = async () => {
-      const data = await getDocs(listCollectionRef);
-      setTodoTask(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    };
-
-    getlist();
-  },[listCollectionRef]);
+  const getlist = async (id) => {
+    const data = await getDocs(collection(db, "users", id, "todoTask"));
+    setTodoTask(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+  };
 
   const handleTodoTask = () => {
-    if (validate()) {
+    if (validate("all")) {
       if (todoTask === null) {
-        addDoc(listCollectionRef, {
+        addDoc(collection(db, "users", user.uid, "todoTask"), {
           storedTodo: todos.fields.todo,
           storedDate: todos.fields.dateTime,
           isCompleted: false,
+          uid: user.uid,
         });
       } else {
         const matchData = todoTask.filter((d) => {
-          if (d.storedTodo === todos.fields.todo) {
-            return true;
-          }
+          return d.storedTodo === todos.fields.todo;
         });
         if (matchData.length === 0) {
-          addDoc(listCollectionRef, {
+          addDoc(collection(db, "users", user.uid, "todoTask"), {
             storedTodo: todos.fields.todo,
             storedDate: todos.fields.dateTime,
             isCompleted: false,
+            uid: user.uid,
           });
+          getlist(user.uid);
 
           setTodos({
             fields: {
@@ -96,14 +108,25 @@ function TodoList() {
   };
 
   const deleteTodo = async (id) => {
-    const userDoc = doc(db, "todoTask", id);
+    const userDoc = doc(db, "users", user.uid, "todoTask", id);
     await deleteDoc(userDoc);
+    getlist(user.uid);
   };
   const completeTodo = async (id, isCompleted) => {
-    const userDoc = doc(db, "todoTask", id);
+    const userDoc = doc(db, "users", user.uid, "todoTask", id);
     const newFields = { isCompleted: !isCompleted };
     await updateDoc(userDoc, newFields);
+    getlist(user.uid);
   };
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+        console.log("hello");
+        getlist(user.uid);
+      } else setUser(null);
+    });
+  }, []);
 
   return (
     <>
@@ -115,12 +138,16 @@ function TodoList() {
           name="todo"
           type="text"
           id="myInput"
-          required="true"
+          required={true}
           onChange={handleTodo}
           value={todos.fields.todo}
           placeholder="Write Task"
           className="form-control-lg"
         />
+        {todos.errors.todo && (
+          <p className=" text-danger">{todos.errors.todo}</p>
+        )}
+
         <input
           name="dateTime"
           type="dateTime-local"
@@ -129,26 +156,21 @@ function TodoList() {
           onChange={handleTodo}
           value={todos.fields.dateTime}
         />
+        {todos.errors.dateTime && (
+          <p className=" text-danger">{todos.errors.dateTime}</p>
+        )}
+
         <br></br>
         <button
           className="btn btn-lg btn-primary  signup-btn"
-          type="submit"
+          type="button"
           onClick={handleTodoTask}
         >
           Add Task
         </button>
 
-        {todos.errors.todo && (
-          <p className=" text-danger">{todos.errors.todo}</p>
-        )}
-
-        {todos.errors.dateTime && (
-          <p className=" text-danger">{todos.errors.dateTime}</p>
-        )}
-
-        {}
         <div className="mt-4 bg-warning">
-          <table class="table">
+          <table className="table">
             <thead>
               <tr>
                 <th>Sr. No</th>
