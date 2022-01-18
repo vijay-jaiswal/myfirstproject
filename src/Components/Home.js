@@ -6,7 +6,9 @@ import TodoList from "./TodoList";
 function Home() {
   let navigate = useNavigate();
 
-  function routeEdit() {
+  function routeEdit(e) {
+    e.preventDefault();
+    
     navigate("/edit");
   }
   return (

@@ -71,10 +71,12 @@ function TodoList() {
     setTodoTask(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
-  const handleTodoTask = () => {
+  const handleTodoTask = async(e) => {
+    e.preventDefault();
+
     if (validate("all")) {
       if (todoTask === null) {
-        addDoc(collection(db, "users", user.uid, "todoTask"), {
+       await addDoc(collection(db, "users", user.uid, "todoTask"), {
           storedTodo: todos.fields.todo,
           storedDate: todos.fields.dateTime,
           isCompleted: false,
@@ -85,7 +87,7 @@ function TodoList() {
           return d.storedTodo === todos.fields.todo;
         });
         if (matchData.length === 0) {
-          addDoc(collection(db, "users", user.uid, "todoTask"), {
+          await   addDoc(collection(db, "users", user.uid, "todoTask"), {
             storedTodo: todos.fields.todo,
             storedDate: todos.fields.dateTime,
             isCompleted: false,
@@ -119,13 +121,19 @@ function TodoList() {
     getlist(user.uid);
   };
   useEffect(() => {
+    let isSubscribed = true
     onAuthStateChanged(auth, (user) => {
+        if (isSubscribed) {
       if (user) {
+
         setUser(user);
         console.log("hello");
         getlist(user.uid);
+      }
       } else setUser(null);
     });
+    return () => isSubscribed = false
+
   }, []);
 
   return (

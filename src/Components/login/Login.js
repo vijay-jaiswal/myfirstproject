@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { db, auth } from "../firebase-config";
-import { collection, setDoc, doc } from "firebase/firestore";
+import { auth } from "../firebase-config";
 import Input from "../Input";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -17,7 +16,6 @@ function Login() {
 
   const [error, setError] = useState("");
   let navigate = useNavigate();
-  const accessFirebase = collection(db, "access");
 
   const setLoginData = (e) => {
     loginCredentials.fields[e.target.name] = e.target.value;
@@ -67,22 +65,21 @@ function Login() {
       e.preventDefault();
 
       try {
-        const user = await signInWithEmailAndPassword(
+        await signInWithEmailAndPassword(
           auth,
           loginCredentials.fields.user,
           loginCredentials.fields.password
         );
         console.log("succesfully login");
-        await setDoc(doc(accessFirebase, user.user.uid), {
-          access: true,
-        });
-        setTimeout(() => {
+        const timer = setTimeout(() => {
           navigate("home");
         }, 500);
+        return () => {
+          clearTimeout(timer);
+        };
       } catch (error) {
         setError(error.message);
       }
-   
     }
   };
 

@@ -18,12 +18,19 @@ const EditProfile = () => {
 
   const [user, setUser] = useState(null);
   useEffect(() => {
+    let isSubscribed = true
+
     onAuthStateChanged(auth, (user) => {
-      if (user) {
+        if (isSubscribed) {
+          if (user) {
+
         setUser(user);
         getlist(user.uid);
-      } else setUser(null);
+      } }
+      else setUser(null);
     });
+    return () => isSubscribed = false
+
   }, []);
 
   const getlist = async (id) => {

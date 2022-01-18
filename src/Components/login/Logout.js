@@ -1,37 +1,24 @@
 import React from "react";
 import swal from "sweetalert";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { db, auth } from "../firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase-config";
 
-import { deleteDoc, doc } from "firebase/firestore";
 function Logout() {
   let navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else setUser(null);
-    });
-  }, []);
-
-  const deleteAccess = async (id) => {
-    const userDoc = doc(db, "access", id);
-    await deleteDoc(userDoc);
-  };
 
   const handleLogout = async (e) => {
     e.preventDefault();
     await signOut(auth);
-    deleteAccess(user.uid);
 
     swal("successfully logout!", "You clicked at logout!", "success");
 
-    navigate("/");
+    const timer = setTimeout(() => {
+      navigate("/");
+    }, 500);
+    return () => {
+      clearTimeout(timer);
+    };
   };
   return (
     <div>
