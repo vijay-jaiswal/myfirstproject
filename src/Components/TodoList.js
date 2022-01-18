@@ -3,6 +3,7 @@ import "../CSS/TodoList.css";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
+import { db, auth } from "./firebase-config";
 import {
   collection,
   getDocs,
@@ -11,12 +12,10 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { db, auth } from "./firebase-config";
 
 function TodoList() {
   const [user, setUser] = useState(null);
   const [todoTask, setTodoTask] = useState([]);
-
   const [todos, setTodos] = useState({
     fields: {
       todo: "",
@@ -25,6 +24,21 @@ function TodoList() {
     errors: {},
   });
 
+  //....................CHECKING IS USER LOGGEDIN OR NOT.................................
+  useEffect(() => {
+    let isSubscribed = true;
+    onAuthStateChanged(auth, (user) => {
+      if (isSubscribed) {
+        if (user) {
+          setUser(user);
+          getlist(user.uid);
+        }
+      } else setUser(null);
+    });
+    return () => (isSubscribed = false);
+  }, []);
+
+  //....................ONCHANGE EVENT............................
   const handleTodo = (e) => {
     todos.fields[e.target.name] = e.target.value;
     setTodos({ ...todos });
@@ -33,6 +47,8 @@ function TodoList() {
     }
     validate(e.target.name);
   };
+
+  //...........................VALIDATION.......................
   const validate = (type) => {
     let fields = todos.fields;
     let errors = {};
@@ -66,32 +82,31 @@ function TodoList() {
     return formIsValid;
   };
 
+  //......................FETCHING TODOLIST FROM FIREBASE.........................
   const getlist = async (id) => {
     const data = await getDocs(collection(db, "users", id, "todoTask"));
     setTodoTask(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
-  const handleTodoTask = async(e) => {
+  //...........................ONCLICK EVENT(ADDING TODO).......................................
+  const handleTodoTask = async (e) => {
     e.preventDefault();
-
     if (validate("all")) {
       if (todoTask === null) {
-       await addDoc(collection(db, "users", user.uid, "todoTask"), {
+        await addDoc(collection(db, "users", user.uid, "todoTask"), {
           storedTodo: todos.fields.todo,
           storedDate: todos.fields.dateTime,
           isCompleted: false,
-          uid: user.uid,
         });
       } else {
         const matchData = todoTask.filter((d) => {
           return d.storedTodo === todos.fields.todo;
         });
         if (matchData.length === 0) {
-          await   addDoc(collection(db, "users", user.uid, "todoTask"), {
+          await addDoc(collection(db, "users", user.uid, "todoTask"), {
             storedTodo: todos.fields.todo,
             storedDate: todos.fields.dateTime,
             isCompleted: false,
-            uid: user.uid,
           });
           getlist(user.uid);
 
@@ -109,32 +124,20 @@ function TodoList() {
     }
   };
 
+  //.......................DELETE TODO.......................
   const deleteTodo = async (id) => {
     const userDoc = doc(db, "users", user.uid, "todoTask", id);
     await deleteDoc(userDoc);
     getlist(user.uid);
   };
+
+  //......................COMPLETED TODO........................
   const completeTodo = async (id, isCompleted) => {
     const userDoc = doc(db, "users", user.uid, "todoTask", id);
     const newFields = { isCompleted: !isCompleted };
     await updateDoc(userDoc, newFields);
     getlist(user.uid);
   };
-  useEffect(() => {
-    let isSubscribed = true
-    onAuthStateChanged(auth, (user) => {
-        if (isSubscribed) {
-      if (user) {
-
-        setUser(user);
-        console.log("hello");
-        getlist(user.uid);
-      }
-      } else setUser(null);
-    });
-    return () => isSubscribed = false
-
-  }, []);
 
   return (
     <>

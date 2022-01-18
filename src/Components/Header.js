@@ -1,8 +1,20 @@
 import React from "react";
 import Logout from "./login/Logout";
+import { useNavigate } from "react-router-dom";
 
 function Header(props) {
   const Url = window.location.pathname;
+  let navigate = useNavigate();
+
+  function routeEdit(e) {
+    e.preventDefault();
+    navigate("/edit");
+  }
+
+  function routeHome(e) {
+    e.preventDefault();
+    navigate("/home");
+  }
 
   if (Url === "/edit") {
     return (
@@ -16,7 +28,7 @@ function Header(props) {
             <form className="d-flex">
               <button
                 className="btn btn-outline-danger text-black bg-success"
-                onClick={props.home}
+                onClick={routeHome}
                 type="button"
               >
                 HOME
@@ -38,7 +50,7 @@ function Header(props) {
             <form className="d-flex">
               <button
                 className="btn btn-outline-danger text-black bg-success"
-                onClick={props.edit}
+                onClick={routeEdit}
                 type="button"
               >
                 EDIT

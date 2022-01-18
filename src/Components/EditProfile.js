@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Input from "./Input";
 import { onAuthStateChanged } from "firebase/auth";
-
 import { db, auth } from "./firebase-config";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 
@@ -15,33 +14,35 @@ const EditProfile = () => {
     phoneNumber: "",
     gender: "",
   });
-
   const [user, setUser] = useState(null);
+  let navigate = useNavigate();
+
+  //....................CHECKING IS USER LOGGEDIN OR NOT.................................
   useEffect(() => {
-    let isSubscribed = true
-
+    let isSubscribed = true;
     onAuthStateChanged(auth, (user) => {
-        if (isSubscribed) {
-          if (user) {
-
-        setUser(user);
-        getlist(user.uid);
-      } }
-      else setUser(null);
+      if (isSubscribed) {
+        if (user) {
+          setUser(user);
+          getlist(user.uid);
+        }
+      } else setUser(null);
     });
-    return () => isSubscribed = false
-
+    return () => (isSubscribed = false);
   }, []);
 
+  //..............................FETCHING USER DETAILS FROM FIREBASE...........................
   const getlist = async (id) => {
     const data = await getDocs(collection(db, "users", id, "userDetail"));
     setAllUserDetails(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
   };
 
-  let navigate = useNavigate();
+  //.......................ONCHANGE EVENT............................
   const handleEdit = (e) => {
     setEditedData({ ...editedData, [e.target.name]: e.target.value });
   };
+
+  //....................FUNCTION DECLARATION..........................
   const updateDetail = async (id) => {
     const userDoc = doc(db, "users", user.uid, "userDetail", id);
     const newFields = {
@@ -52,23 +53,20 @@ const EditProfile = () => {
     };
     await updateDoc(userDoc, newFields);
   };
+
+  //..........................ONCLICK EVENT(UPDATE).....................
   const handleUpdate = () => {
     allUserDetails.forEach((el) => {
       updateDetail(el.id);
       console.log(el.id);
       console.log(el.firstName);
-
     });
-
     navigate("/home");
   };
 
-  function routeHome() {
-    navigate("/home");
-  }
   return (
     <div>
-      <Header home={routeHome} />
+      <Header />
 
       <br></br>
       <br></br>
@@ -79,18 +77,17 @@ const EditProfile = () => {
           <div className="col-md-6 col-md-offset-3 justify-content-center">
             <legend>EDIT PROFILE</legend>
             <div className="row">
-      <div className="col-xs-6 col-md-6">
-      First Name:
-      <Input
-        name="firstName"
-        type="text"
-        onChange={handleEdit}
-        placeholder="First Name"
-        value={editedData.firstName}
-        
-      />
-    </div>
-             
+              <div className="col-xs-6 col-md-6">
+                First Name:
+                <Input
+                  name="firstName"
+                  type="text"
+                  onChange={handleEdit}
+                  placeholder="First Name"
+                  value={editedData.firstName}
+                />
+              </div>
+
               <div className="col-xs-6 col-md-6">
                 Last Name:
                 <Input

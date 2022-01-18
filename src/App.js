@@ -12,6 +12,7 @@ import { onAuthStateChanged } from "firebase/auth";
 function App() {
   const [user, setUser] = useState(null);
 
+  //....................CHECKING IS USER LOGGEDIN OR NOT.................................
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -20,7 +21,6 @@ function App() {
     });
   }, []);
 
- 
   return (
     <>
       <div className="container-fluid">
@@ -28,7 +28,6 @@ function App() {
           {user && <Route path="/" exact element={<Home />} />}
           {!user && <Route path="/" exact element={<Login />} />}
           {!user && <Route path="/reset" exact element={<ResetPassword />} />}
-
           {!user && <Route path="/signup" exact element={<Signup />} />}
           {user && <Route path="/home" exact element={<Home />} />}
           {user && <Route path="/edit" exact element={<EditProfile />} />}

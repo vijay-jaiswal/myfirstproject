@@ -13,10 +13,10 @@ function Login() {
     },
     errors: {},
   });
-
   const [error, setError] = useState("");
   let navigate = useNavigate();
 
+  //.............................ONCHANGE EVENT................................
   const setLoginData = (e) => {
     loginCredentials.fields[e.target.name] = e.target.value;
     setLoginCredentials({ ...loginCredentials });
@@ -26,6 +26,8 @@ function Login() {
     }
     validate(e.target.name);
   };
+
+  //...........................VALIDATION..............................
   const validate = (type) => {
     let fields = loginCredentials.fields;
     let errors = {};
@@ -60,6 +62,7 @@ function Login() {
     return formIsValid;
   };
 
+  // .........................ONCLICK EVENT(LOGIN).......................................
   const handleLogin = async (e) => {
     if (validate("all")) {
       e.preventDefault();

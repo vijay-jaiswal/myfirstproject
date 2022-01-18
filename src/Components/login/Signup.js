@@ -21,20 +21,21 @@ function Signup() {
     errors: {},
   });
   const [error, setError] = useState("");
+  let navigate = useNavigate();
+
+  //....................ONCHANGE EVENT..........................
   const handleSignUp = (e) => {
     signUpData.fields[e.target.name] = e.target.value;
     setSignUpData({ ...signUpData });
-
     if (signUpData.errors[e.target.name]) {
       signUpData.errors[e.target.name] = "";
     }
     validate(e.target.name);
   };
-  let navigate = useNavigate();
 
+  //...................ONCLICK EVENT(SIGNUP)..........................
   const handleSign = async (e) => {
     e.preventDefault();
-
     if (validate("all")) {
       if (signUpData.fields.password1 === signUpData.fields.password2) {
         try {
@@ -62,6 +63,7 @@ function Signup() {
     }
   };
 
+  //..........................VALIADATION.................................
   const validate = (type) => {
     let fields = signUpData.fields;
     let errors = {};
@@ -98,7 +100,6 @@ function Signup() {
             errors["phoneNumber"] = "*Please enter valid phoneNumber ";
           }
         }
-
         if (!fields["phoneNumber"]) {
           formIsValid = false;
           errors["phoneNumber"] = "*Please enter your phoneNumber ";
@@ -111,7 +112,6 @@ function Signup() {
             errors["email"] = "*Please enter valid email-ID.";
           }
         }
-
         if (!fields["email"]) {
           formIsValid = false;
           errors["email"] = "*Please enter your email-ID.";
@@ -128,7 +128,6 @@ function Signup() {
             errors["password1"] = "*Please enter valid password.";
           }
         }
-
         if (!fields["password1"]) {
           formIsValid = false;
           errors["password1"] = "*Please enter your password";
@@ -141,7 +140,6 @@ function Signup() {
             errors["password2"] = "*password not matching";
           }
         }
-
         if (!fields["password2"]) {
           formIsValid = false;
           errors["password2"] = "*Please enter your password";
@@ -176,7 +174,6 @@ function Signup() {
         <div className="row  justify-content-center">
           <div className="col-md-6 col-md-offset-3 justify-content-center">
             <legend>Sign Up</legend>
-
             <h4>It's free and always will be.</h4>
             <div className="row">
               <div className="col-xs-6 col-md-6">
@@ -187,6 +184,7 @@ function Signup() {
                   placeholder="First Name"
                   value={signUpData.fields.firstName}
                 />
+
                 {signUpData.errors.firstName && (
                   <p className=" text-danger">{signUpData.errors.firstName}</p>
                 )}
@@ -199,11 +197,13 @@ function Signup() {
                   placeholder="Last Name"
                   value={signUpData.fields.lastName}
                 />
+
                 {signUpData.errors.lastName && (
                   <p className=" text-danger">{signUpData.errors.lastName}</p>
                 )}
               </div>
             </div>
+
             <Input
               name="phoneNumber"
               type="number"
@@ -211,6 +211,7 @@ function Signup() {
               placeholder="Phone Number"
               value={signUpData.fields.phoneNumber}
             />
+
             {signUpData.errors.phoneNumber && (
               <p className=" text-danger">{signUpData.errors.phoneNumber}</p>
             )}
@@ -222,6 +223,7 @@ function Signup() {
               placeholder="Email"
               value={signUpData.fields.email}
             />
+
             {signUpData.errors.email && (
               <p className=" text-danger">{signUpData.errors.email}</p>
             )}
@@ -245,6 +247,7 @@ function Signup() {
               placeholder="Confirm Password"
               value={signUpData.fields.password2}
             />
+
             {signUpData.errors.password2 && (
               <p className=" text-danger">{signUpData.errors.password2}</p>
             )}
@@ -254,6 +257,7 @@ function Signup() {
               <input type="radio" value="Female" name="gender" /> Female
               <input type="radio" value="Other" name="gender" /> Other
             </div>
+
             {signUpData.errors.gender && (
               <p className=" text-danger">{signUpData.errors.gender}</p>
             )}

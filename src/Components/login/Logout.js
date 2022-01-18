@@ -7,12 +7,11 @@ import { auth } from "../firebase-config";
 function Logout() {
   let navigate = useNavigate();
 
+  //.................ONCLICK EVENT(LOGOUT).....................
   const handleLogout = async (e) => {
     e.preventDefault();
     await signOut(auth);
-
     swal("successfully logout!", "You clicked at logout!", "success");
-
     const timer = setTimeout(() => {
       navigate("/");
     }, 500);
@@ -20,6 +19,7 @@ function Logout() {
       clearTimeout(timer);
     };
   };
+
   return (
     <div>
       <button

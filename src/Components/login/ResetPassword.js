@@ -9,10 +9,12 @@ function ResetPassword() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
 
+  //..........................ONCLICK EVENT(NAVIGATION).....................................
   const GotoLogin = () => {
     navigate("/");
   };
 
+  //....................ONCLICK EVENT(RESET)..........................
   const ResetLink = async () => {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -22,6 +24,7 @@ function ResetPassword() {
       setError(error.message);
     }
   };
+
   return (
     <div className="container padding-bottom-3x mb-2 mt-5">
       <div className="row justify-content-center">
