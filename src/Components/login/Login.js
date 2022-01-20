@@ -77,9 +77,10 @@ function Login() {
           loginCredentials.fields.password
         );
         localStorage.setItem("access", true);
-        handleIsLogin();
         console.log("succesfully login");
-        getlist(user.user.uid);
+        await getlist(user.user.uid);
+        handleIsLogin();
+
         navigate("todolist");
       } catch (error) {
         setError(error.message);

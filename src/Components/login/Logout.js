@@ -17,6 +17,9 @@ function Logout() {
   localStorage.removeItem("access");
   handleIsLogin();
 
+  localStorage.removeItem("userDetails");
+
+
     swal("successfully logout!", "You clicked at logout!", "success");
       navigate("/");
   };

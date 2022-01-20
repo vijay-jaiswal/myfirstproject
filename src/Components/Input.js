@@ -11,6 +11,6 @@ export default function Input(props) {
       required={true}
       defaultValue={props.value}
       contentEditable
-    />
+          />
   );
 }
