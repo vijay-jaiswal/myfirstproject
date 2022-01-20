@@ -94,17 +94,17 @@ function TodoList() {
     if (validate("all")) {
       if (todoTask === null) {
         await addDoc(collection(db, "users", user.uid, "todoTask"), {
-          storedTodo: todos.fields.todo,
+          storedTodo: todos.fields.todo.trim(),
           storedDate: todos.fields.dateTime,
           isCompleted: false,
         });
       } else {
         const matchData = todoTask.filter((d) => {
-          return d.storedTodo === todos.fields.todo;
+          return d.storedTodo === todos.fields.todo.trim();
         });
         if (matchData.length === 0) {
           await addDoc(collection(db, "users", user.uid, "todoTask"), {
-            storedTodo: todos.fields.todo,
+            storedTodo: todos.fields.todo.trim(),
             storedDate: todos.fields.dateTime,
             isCompleted: false,
           });
@@ -142,6 +142,7 @@ function TodoList() {
   return (
     <>
       <div className="log-out d-flex justify-content-between"></div>
+      <br></br>
 
       <div id="myDIV" className="header">
         <h2>My To Do List</h2>

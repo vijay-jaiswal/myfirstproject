@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Login.css";
-import { auth } from "../firebase-config";
+import { auth, db } from "../firebase-config";
 import Input from "../Input";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { authenticate } from "../../App";
+import { collection, getDocs } from "firebase/firestore";
 
 function Login() {
+  const [handleIsLogin] = useContext(authenticate);
   const [loginCredentials, setLoginCredentials] = useState({
     fields: {
       user: "",
@@ -64,26 +67,42 @@ function Login() {
 
   // .........................ONCLICK EVENT(LOGIN).......................................
   const handleLogin = async (e) => {
-    if (validate("all")) {
-      e.preventDefault();
+    e.preventDefault();
 
+    if (validate("all")) {
       try {
-        await signInWithEmailAndPassword(
+        const user = await signInWithEmailAndPassword(
           auth,
           loginCredentials.fields.user,
           loginCredentials.fields.password
         );
+        localStorage.setItem("access", true);
+        handleIsLogin();
         console.log("succesfully login");
-        const timer = setTimeout(() => {
-          navigate("home");
-        }, 500);
-        return () => {
-          clearTimeout(timer);
-        };
+        getlist(user.user.uid);
+        navigate("todolist");
       } catch (error) {
         setError(error.message);
       }
     }
+  };
+
+  //....................FETCHING DETAILS FROM FIREBASE....................................
+  const getlist = async (id) => {
+    const data = await getDocs(collection(db, "users", id, "userDetail"));
+    let userdetail = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+    userdetail.forEach((e) => {
+      let userDetails = [];
+      userDetails = [
+        {
+          firstName: e.firstName,
+          lastName: e.lastName,
+          phoneNumber: e.phoneNumber,
+          gender: e.gender,
+        },
+      ];
+      localStorage.setItem("userDetails", JSON.stringify(userDetails));
+    });
   };
 
   return (

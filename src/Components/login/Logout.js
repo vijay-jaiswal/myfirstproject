@@ -1,23 +1,24 @@
 import React from "react";
 import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
+import { authenticate } from "../../App";
+import { useContext} from "react";
 
 function Logout() {
   let navigate = useNavigate();
+  const [handleIsLogin] = useContext(authenticate);
 
   //.................ONCLICK EVENT(LOGOUT).....................
   const handleLogout = async (e) => {
     e.preventDefault();
     await signOut(auth);
+  localStorage.removeItem("access");
+  handleIsLogin();
+
     swal("successfully logout!", "You clicked at logout!", "success");
-    const timer = setTimeout(() => {
       navigate("/");
-    }, 500);
-    return () => {
-      clearTimeout(timer);
-    };
   };
 
   return (

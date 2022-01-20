@@ -2,7 +2,7 @@ import React from "react";
 import Logout from "./login/Logout";
 import { useNavigate } from "react-router-dom";
 
-function Header(props) {
+function Header() {
   const Url = window.location.pathname;
   let navigate = useNavigate();
 
@@ -11,27 +11,28 @@ function Header(props) {
     navigate("/edit");
   }
 
-  function routeHome(e) {
+  function routeTodolist(e) {
     e.preventDefault();
-    navigate("/home");
+    navigate("/todolist");
   }
+    var userDetails=(JSON.parse(localStorage.getItem("userDetails"))[0]);
 
   if (Url === "/edit") {
     return (
       <div>
         <nav className="navbar fixed-top navbar-light bg-primary">
           <div className="container-fluid">
-            <h6 className="navbar-brand  justify-content-center text-uppercase align-content-center">
-              vbook
+            <h6 className="navbar-brand  justify-content-center  align-content-center">
+             hi.. {userDetails.firstName}
             </h6>
 
             <form className="d-flex">
               <button
                 className="btn btn-outline-danger text-black bg-success"
-                onClick={routeHome}
+                onClick={routeTodolist}
                 type="button"
               >
-                HOME
+                TODOLIST
               </button>
               <Logout></Logout>
             </form>
@@ -44,8 +45,9 @@ function Header(props) {
       <div>
         <nav className="navbar fixed-top navbar-light bg-primary">
           <div className="container-fluid">
-            <h6 className="navbar-brand  justify-content-center text-uppercase align-content-center">
-              vbook
+            <h6 className="navbar-brand  justify-content-center  align-content-center">
+             hi.. {userDetails.firstName}
+              
             </h6>
             <form className="d-flex">
               <button

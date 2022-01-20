@@ -1,11 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Input from "../Input";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import "./Signup.css";
 import { db, auth } from "../firebase-config";
 import { collection, addDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [signUpData, setSignUpData] = useState({
@@ -45,7 +47,7 @@ function Signup() {
             signUpData.fields.password1
           );
           console.log(user.user.uid);
-          addDoc(collection(db, "users", user.user.uid, "userDetail"), {
+        await  addDoc(collection(db, "users", user.user.uid, "userDetail"), {
             firstName: signUpData.fields.firstName,
             lastName: signUpData.fields.lastName,
             phoneNumber: signUpData.fields.phoneNumber,
@@ -53,6 +55,7 @@ function Signup() {
             gender: signUpData.fields.gender,
             uid: user.user.uid,
           });
+          await signOut(auth);
           navigate("/");
         } catch (error) {
           setError(error.message);
@@ -134,7 +137,7 @@ function Signup() {
         }
         break;
       case "password2":
-        if (typeof fields[""] !== "undefined") {
+        if (typeof fields["password1"] !== "undefined") {
           if (!fields["password2"].match(fields["password1"])) {
             formIsValid = false;
             errors["password2"] = "*password not matching";
