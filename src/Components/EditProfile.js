@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "./Input";
 import { onAuthStateChanged } from "firebase/auth";
@@ -7,17 +7,19 @@ import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { authenticate } from "../App";
 
 const EditProfile = () => {
+  let navigate = useNavigate();
   const [allUserDetails, setAllUserDetails] = useState([]);
   const [handleIsLogin] = useContext(authenticate);
-
+  const [user, setUser] = useState(null);
   const [editedData, setEditedData] = useState({
     firstName: "",
     lastName: "",
     phoneNumber: "",
     gender: "",
   });
-  const [user, setUser] = useState(null);
-  let navigate = useNavigate();
+  const [errors, setErrors] = useState({
+    error: {},
+  });
 
   //....................CHECKING IS USER LOGGEDIN OR NOT.................................
   useEffect(() => {
@@ -45,19 +47,85 @@ const EditProfile = () => {
 
   //.......................ONCHANGE EVENT............................
   const handleEdit = (e) => {
-    setEditedData({ ...editedData, [e.target.name]: e.target.value });
+    editedData[e.target.name] = e.target.value;
+    setEditedData({ ...editedData });
+    if (errors.error[e.target.name]) {
+      errors.error[e.target.name] = "";
+    }
+    validate(e.target.name);
+  };
+  const validate = (type) => {
+    let errors = {};
+    let formIsValid = true;
+    switch (type) {
+      case "firstName":
+        if (!editedData["firstName"]) {
+          formIsValid = false;
+          errors["firstName"] = "*Please enter your firstName.";
+        }
+        if (editedData["firstName"]) {
+          if (!(editedData["firstName"].length > 2)) {
+            formIsValid = false;
+            errors["firstName"] = "*FirstName must be atleast 3 character";
+          }
+        }
+        if (editedData["firstName"] !== "") {
+          if (!editedData["firstName"].match(/^[a-zA-Z ]*$/)) {
+            formIsValid = false;
+            errors["firstName"] =
+              "*FirstName must be  alphabet characters only.";
+          }
+        }
+        break;
+      case "lastName":
+        if (!editedData["lastName"]) {
+          formIsValid = false;
+          errors["lastName"] = "*Please enter your lastName.";
+        }
+        if (editedData["lastName"]) {
+          if (!(editedData["lastName"].length > 2)) {
+            formIsValid = false;
+            errors["lastName"] = "*lastName must be atleast 3 character";
+          }
+        }
+        if (typeof editedData["lastName"] !== "undefined") {
+          if (!editedData["lastName"].match(/^[a-zA-Z ]*$/)) {
+            formIsValid = false;
+            errors["lastName"] = "*lastName must be alphabet characters only.";
+          }
+        }
+        break;
+      case "phoneNumber":
+        if (typeof editedData["phoneNumber"] !== "undefined") {
+          if (!editedData["phoneNumber"].match(/^\d{10}$/)) {
+            formIsValid = false;
+            errors["phoneNumber"] = "*PhoneNumber must be 10 digit only ";
+          }
+        }
+        if (!editedData["phoneNumber"]) {
+          formIsValid = false;
+          errors["phoneNumber"] = "*Please enter your phoneNumber ";
+        }
+        break;
+
+      default:
+        break;
+    }
+    errors.error = errors;
+    setErrors({ ...errors });
+    return formIsValid;
   };
 
   //....................FUNCTION DECLARATION..........................
   const updateDetail = async (id) => {
     const userDoc = doc(db, "users", user.uid, "userDetail", id);
-    const newFields = {
+    const neweditedData = {
       firstName: editedData.firstName,
       lastName: editedData.lastName,
       phoneNumber: editedData.phoneNumber,
       gender: editedData.gender,
     };
-    await updateDoc(userDoc, newFields);
+    await updateDoc(userDoc, neweditedData);
     localStorage.setItem(
       "userDetails",
       JSON.stringify([
@@ -70,15 +138,20 @@ const EditProfile = () => {
       ])
     );
     handleIsLogin();
-
   };
 
   //..........................ONCLICK EVENT(UPDATE).....................
   const handleUpdate = () => {
-    allUserDetails.forEach((el) => {
-      updateDetail(el.id);
-    });
-    navigate("/todolist");
+    if (
+      validate("firstName") &&
+      validate("lastName") &&
+      validate("phoneNumber")
+    ) {
+      allUserDetails.forEach((el) => {
+        updateDetail(el.id);
+      });
+      navigate("/todolist");
+    }
   };
 
   return (
@@ -101,6 +174,9 @@ const EditProfile = () => {
                   placeholder="First Name"
                   value={editedData.firstName}
                 />
+                {errors.error.firstName && (
+                  <p className=" text-danger">{errors.error.firstName}</p>
+                )}
               </div>
 
               <div className="col-xs-6 col-md-6">
@@ -111,7 +187,10 @@ const EditProfile = () => {
                   onChange={handleEdit}
                   placeholder="Last Name"
                   value={editedData.lastName}
-                />
+                />{" "}
+                {errors.error.lastName && (
+                  <p className=" text-danger">{errors.error.lastName}</p>
+                )}
               </div>
             </div>
             Phone Number:
@@ -122,6 +201,9 @@ const EditProfile = () => {
               placeholder="Phone Number"
               value={editedData.phoneNumber}
             />
+            {errors.error.phoneNumber && (
+              <p className=" text-danger">{errors.error.phoneNumber}</p>
+            )}
             <div>
               Gender:
               <input

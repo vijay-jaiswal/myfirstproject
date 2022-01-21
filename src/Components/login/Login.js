@@ -9,59 +9,50 @@ import { collection, getDocs } from "firebase/firestore";
 
 function Login() {
   const [handleIsLogin] = useContext(authenticate);
-  const [loginCredentials, setLoginCredentials] = useState({
-    fields: {
-      user: "",
-      password: "",
-    },
-    errors: {},
-  });
   const [error, setError] = useState("");
   let navigate = useNavigate();
+  const [loginCredentials, setLoginCredentials] = useState({
+    user: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({
+    error: {},
+  });
 
   //.............................ONCHANGE EVENT................................
   const setLoginData = (e) => {
-    loginCredentials.fields[e.target.name] = e.target.value;
+    loginCredentials[e.target.name] = e.target.value;
     setLoginCredentials({ ...loginCredentials });
 
-    if (loginCredentials.errors[e.target.name]) {
-      loginCredentials.errors[e.target.name] = "";
+    if (errors.error[e.target.name]) {
+      errors.error[e.target.name] = "";
     }
     validate(e.target.name);
   };
 
   //...........................VALIDATION..............................
   const validate = (type) => {
-    let fields = loginCredentials.fields;
     let errors = {};
     let formIsValid = true;
     switch (type) {
       case "user":
-        if (!fields["user"]) {
+        if (!loginCredentials["user"]) {
           formIsValid = false;
-          errors["user"] = "*please enter user detail.";
+          errors["user"] = "*please enter email.";
         }
         break;
 
       case "password":
-        if (!fields["password"]) {
+        if (!loginCredentials["password"]) {
           formIsValid = false;
           errors["password"] = "*please enter password.";
         }
         break;
-      case "all":
-        Object.keys(fields).forEach((key) => {
-          if (fields[key].trim() === "") {
-            formIsValid = false;
-            errors[key] = "please enter value";
-          }
-        });
-        break;
       default:
         break;
     }
-    loginCredentials.errors = errors;
-    setLoginCredentials({ ...loginCredentials });
+    errors.error = errors;
+    setErrors({ ...errors });
     return formIsValid;
   };
 
@@ -69,12 +60,12 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (validate("all")) {
+    if (validate("user") && validate("password")) {
       try {
         const user = await signInWithEmailAndPassword(
           auth,
-          loginCredentials.fields.user,
-          loginCredentials.fields.password
+          loginCredentials.user,
+          loginCredentials.password
         );
         localStorage.setItem("access", true);
         console.log("succesfully login");
@@ -128,15 +119,15 @@ function Login() {
                       type="text"
                       onChange={setLoginData}
                       placeholder="enter email "
-                      value={loginCredentials.fields.user}
+                      value={loginCredentials.user}
                     />
                   </div>
                 </div>
 
                 <div>
-                  {loginCredentials.errors.user && (
+                  {errors.error.user && (
                     <p className="text-center text-danger">
-                      {loginCredentials.errors.user}
+                      {errors.error.user}
                     </p>
                   )}
                 </div>
@@ -152,15 +143,15 @@ function Login() {
                       type="password"
                       onChange={setLoginData}
                       placeholder="enter password"
-                      value={loginCredentials.fields.password}
+                      value={loginCredentials.password}
                     />
                   </div>
                 </div>
 
                 <div>
-                  {loginCredentials.errors.password && (
+                  {errors.error.password && (
                     <p className="text-center text-danger">
-                      {loginCredentials.errors.password}
+                      {errors.error.password}
                     </p>
                   )}
                 </div>

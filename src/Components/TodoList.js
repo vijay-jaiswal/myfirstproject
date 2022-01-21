@@ -66,14 +66,6 @@ function TodoList() {
           errors["dateTime"] = "*please select date and time.";
         }
         break;
-      case "all":
-        Object.keys(fields).forEach((key) => {
-          if (fields[key].trim() === "") {
-            formIsValid = false;
-            errors[key] = "please enter value";
-          }
-        });
-        break;
       default:
         break;
     }
@@ -91,7 +83,7 @@ function TodoList() {
   //...........................ONCLICK EVENT(ADDING TODO).......................................
   const handleTodoTask = async (e) => {
     e.preventDefault();
-    if (validate("all")) {
+    if (validate("todo") && validate("dateTime")) {
       if (todoTask === null) {
         await addDoc(collection(db, "users", user.uid, "todoTask"), {
           storedTodo: todos.fields.todo.trim(),

@@ -11,26 +11,26 @@ import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [signUpData, setSignUpData] = useState({
-    fields: {
-      firstName: "",
-      lastName: "",
-      phoneNumber: "",
-      email: "",
-      gender: "",
-      password1: "",
-      password2: "",
-    },
-    errors: {},
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    gender: "",
+    password1: "",
+    password2: "",
+  });
+  const [errors, setErrors] = useState({
+    error: {},
   });
   const [error, setError] = useState("");
   let navigate = useNavigate();
 
   //....................ONCHANGE EVENT..........................
   const handleSignUp = (e) => {
-    signUpData.fields[e.target.name] = e.target.value;
+    signUpData[e.target.name] = e.target.value;
     setSignUpData({ ...signUpData });
-    if (signUpData.errors[e.target.name]) {
-      signUpData.errors[e.target.name] = "";
+    if (errors.error[e.target.name]) {
+      errors.error[e.target.name] = "";
     }
     validate(e.target.name);
   };
@@ -38,21 +38,29 @@ function Signup() {
   //...................ONCLICK EVENT(SIGNUP)..........................
   const handleSign = async (e) => {
     e.preventDefault();
-    if (validate("all")) {
-      if (signUpData.fields.password1 === signUpData.fields.password2) {
+    if (
+      validate("firstName") &&
+      validate("lastName") &&
+      validate("phoneNumber") &&
+      validate("email") &&
+      validate("password1") &&
+      validate("password2") &&
+      validate("gender")
+    ) {
+      if (signUpData.password1 === signUpData.password2) {
         try {
           const user = await createUserWithEmailAndPassword(
             auth,
-            signUpData.fields.email,
-            signUpData.fields.password1
+            signUpData.email,
+            signUpData.password1
           );
           console.log(user.user.uid);
-        await  addDoc(collection(db, "users", user.user.uid, "userDetail"), {
-            firstName: signUpData.fields.firstName,
-            lastName: signUpData.fields.lastName,
-            phoneNumber: signUpData.fields.phoneNumber,
+          await addDoc(collection(db, "users", user.user.uid, "userDetail"), {
+            firstName: signUpData.firstName,
+            lastName: signUpData.lastName,
+            phoneNumber: signUpData.phoneNumber,
             email: user.user.email,
-            gender: signUpData.fields.gender,
+            gender: signUpData.gender,
             uid: user.user.uid,
           });
           await signOut(auth);
@@ -68,62 +76,76 @@ function Signup() {
 
   //..........................VALIADATION.................................
   const validate = (type) => {
-    let fields = signUpData.fields;
     let errors = {};
     let formIsValid = true;
     switch (type) {
       case "firstName":
-        if (!fields["firstName"]) {
+        if (!signUpData["firstName"]) {
           formIsValid = false;
           errors["firstName"] = "*Please enter your firstName.";
         }
-        if (typeof fields["firstName"] !== "undefined") {
-          if (!fields["firstName"].match(/^[a-zA-Z ]*$/)) {
+        if (signUpData["firstName"]) {
+          if (!(signUpData["firstName"].length > 2)) {
             formIsValid = false;
-            errors["firstName"] = "*Please enter alphabet characters only.";
+            errors["firstName"] = "*FirstName must be atleast 3 character";
+          }
+        }
+        if (typeof signUpData["firstName"] !== "undefined") {
+          if (!signUpData["firstName"].match(/^[a-zA-Z ]*$/)) {
+            formIsValid = false;
+            errors["firstName"] =
+              "*FirstName must be  alphabet characters only.";
           }
         }
         break;
       case "lastName":
-        if (!fields["lastName"]) {
+        if (!signUpData["lastName"]) {
           formIsValid = false;
           errors["lastName"] = "*Please enter your lastName.";
         }
-        if (typeof fields["lastName"] !== "undefined") {
-          if (!fields["lastName"].match(/^[a-zA-Z ]*$/)) {
+        if (signUpData["lastName"]) {
+          if (!(signUpData["lastName"].length > 2)) {
             formIsValid = false;
-            errors["lastName"] = "*Please enter alphabet characters only.";
+            errors["lastName"] = "*lastName must be atleast 3 character";
+          }
+        }
+
+        if (typeof signUpData["lastName"] !== "undefined") {
+          if (!signUpData["lastName"].match(/^[a-zA-Z ]*$/)) {
+            formIsValid = false;
+            errors["lastName"] = "*lastName must be  alphabet characters only.";
           }
         }
         break;
       case "phoneNumber":
-        if (typeof fields["phoneNumber"] !== "undefined") {
-          if (!fields["phoneNumber"].match(/^\d{10}$/)) {
+        if (typeof signUpData["phoneNumber"] !== "undefined") {
+          if (!signUpData["phoneNumber"].match(/^\d{10}$/)) {
             formIsValid = false;
-            errors["phoneNumber"] = "*Please enter valid phoneNumber ";
+            errors["phoneNumber"] = "*phoneNumber must be 10-digit only ";
           }
         }
-        if (!fields["phoneNumber"]) {
+        if (!signUpData["phoneNumber"]) {
           formIsValid = false;
           errors["phoneNumber"] = "*Please enter your phoneNumber ";
         }
         break;
       case "email":
-        if (typeof fields["email"] !== "undefined") {
-          if (!fields["email"].match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)) {
+        if (typeof signUpData["email"] !== "undefined") {
+          if (!signUpData["email"].match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)) {
             formIsValid = false;
-            errors["email"] = "*Please enter valid email-ID.";
+            errors["email"] =
+              "*email must contain one upperCase,lowerCase and special character,ex-aBc@gmail.com";
           }
         }
-        if (!fields["email"]) {
+        if (!signUpData["email"]) {
           formIsValid = false;
           errors["email"] = "*Please enter your email-ID.";
         }
         break;
       case "password1":
-        if (typeof fields["password1"] !== "undefined") {
+        if (typeof signUpData["password1"] !== "undefined") {
           if (
-            !fields["password1"].match(
+            !signUpData["password1"].match(
               /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/
             )
           ) {
@@ -131,42 +153,35 @@ function Signup() {
             errors["password1"] = "*Please enter valid password.";
           }
         }
-        if (!fields["password1"]) {
+        if (!signUpData["password1"]) {
           formIsValid = false;
           errors["password1"] = "*Please enter your password";
         }
         break;
       case "password2":
-        if (typeof fields["password1"] !== "undefined") {
-          if (!fields["password2"].match(fields["password1"])) {
+        if (typeof signUpData["password1"] !== "undefined") {
+          if (!signUpData["password2"].match(signUpData["password1"])) {
             formIsValid = false;
             errors["password2"] = "*password not matching";
           }
         }
-        if (!fields["password2"]) {
+        if (!signUpData["password2"]) {
           formIsValid = false;
           errors["password2"] = "*Please enter your password";
         }
         break;
       case "gender":
-        if (!fields["gender"]) {
+        if (!signUpData["gender"]) {
           formIsValid = false;
           errors["gender"] = "*Please choose your gender.";
         }
         break;
-      case "all":
-        Object.keys(fields).forEach((key) => {
-          if (fields[key].trim() === "") {
-            formIsValid = false;
-            errors[key] = "please enter value";
-          }
-        });
-        break;
+
       default:
         break;
     }
-    signUpData.errors = errors;
-    setSignUpData({ ...signUpData });
+    errors.error = errors;
+    setErrors({ ...errors });
     return formIsValid;
   };
 
@@ -185,11 +200,11 @@ function Signup() {
                   type="text"
                   onChange={handleSignUp}
                   placeholder="First Name"
-                  value={signUpData.fields.firstName}
+                  value={signUpData.firstName}
                 />
 
-                {signUpData.errors.firstName && (
-                  <p className=" text-danger">{signUpData.errors.firstName}</p>
+                {errors.error.firstName && (
+                  <p className=" text-danger">{errors.error.firstName}</p>
                 )}
               </div>
               <div className="col-xs-6 col-md-6">
@@ -198,11 +213,11 @@ function Signup() {
                   type="text"
                   onChange={handleSignUp}
                   placeholder="Last Name"
-                  value={signUpData.fields.lastName}
+                  value={signUpData.lastName}
                 />
 
-                {signUpData.errors.lastName && (
-                  <p className=" text-danger">{signUpData.errors.lastName}</p>
+                {errors.error.lastName && (
+                  <p className=" text-danger">{errors.error.lastName}</p>
                 )}
               </div>
             </div>
@@ -212,11 +227,11 @@ function Signup() {
               type="number"
               onChange={handleSignUp}
               placeholder="Phone Number"
-              value={signUpData.fields.phoneNumber}
+              value={signUpData.phoneNumber}
             />
 
-            {signUpData.errors.phoneNumber && (
-              <p className=" text-danger">{signUpData.errors.phoneNumber}</p>
+            {errors.error.phoneNumber && (
+              <p className=" text-danger">{errors.error.phoneNumber}</p>
             )}
 
             <Input
@@ -224,11 +239,11 @@ function Signup() {
               type="email"
               onChange={handleSignUp}
               placeholder="Email"
-              value={signUpData.fields.email}
+              value={signUpData.email}
             />
 
-            {signUpData.errors.email && (
-              <p className=" text-danger">{signUpData.errors.email}</p>
+            {errors.error.email && (
+              <p className=" text-danger">{errors.error.email}</p>
             )}
 
             <Input
@@ -236,11 +251,11 @@ function Signup() {
               type="Password"
               onChange={handleSignUp}
               placeholder="Password"
-              value={signUpData.fields.password1}
+              value={signUpData.password1}
             />
 
-            {signUpData.errors.password1 && (
-              <p className=" text-danger">{signUpData.errors.password1}</p>
+            {errors.error.password1 && (
+              <p className=" text-danger">{errors.error.password1}</p>
             )}
 
             <Input
@@ -248,21 +263,21 @@ function Signup() {
               type="Password"
               onChange={handleSignUp}
               placeholder="Confirm Password"
-              value={signUpData.fields.password2}
+              value={signUpData.password2}
             />
 
-            {signUpData.errors.password2 && (
-              <p className=" text-danger">{signUpData.errors.password2}</p>
+            {errors.error.password2 && (
+              <p className=" text-danger">{errors.error.password2}</p>
             )}
 
-            <div onChange={handleSignUp} value={signUpData.fields.gender}>
+            <div onChange={handleSignUp} value={signUpData.gender}>
               Gender: <input type="radio" value="Male" name="gender" /> Male
               <input type="radio" value="Female" name="gender" /> Female
               <input type="radio" value="Other" name="gender" /> Other
             </div>
 
-            {signUpData.errors.gender && (
-              <p className=" text-danger">{signUpData.errors.gender}</p>
+            {errors.error.gender && (
+              <p className=" text-danger">{errors.error.gender}</p>
             )}
             <p className=" text-danger">{error}</p>
 
