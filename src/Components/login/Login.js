@@ -156,7 +156,7 @@ function Login() {
                   )}
                 </div>
               </div>
-              <p className=" text-center text-danger">{error}</p>
+              {error && <p className=" text-center text-danger">{error}</p>}
               <div className="d-flex justify-content-center mt-3 login_container">
                 <button
                   type="button"

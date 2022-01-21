@@ -47,29 +47,25 @@ function Signup() {
       validate("password2") &&
       validate("gender")
     ) {
-      if (signUpData.password1 === signUpData.password2) {
-        try {
-          const user = await createUserWithEmailAndPassword(
-            auth,
-            signUpData.email,
-            signUpData.password1
-          );
-          console.log(user.user.uid);
-          await addDoc(collection(db, "users", user.user.uid, "userDetail"), {
-            firstName: signUpData.firstName,
-            lastName: signUpData.lastName,
-            phoneNumber: signUpData.phoneNumber,
-            email: user.user.email,
-            gender: signUpData.gender,
-            uid: user.user.uid,
-          });
-          await signOut(auth);
-          navigate("/");
-        } catch (error) {
-          setError(error.message);
-        }
-      } else {
-        setError("password not matching");
+      try {
+        const user = await createUserWithEmailAndPassword(
+          auth,
+          signUpData.email,
+          signUpData.password1
+        );
+        console.log(user.user.uid);
+        await addDoc(collection(db, "users", user.user.uid, "userDetail"), {
+          firstName: signUpData.firstName,
+          lastName: signUpData.lastName,
+          phoneNumber: signUpData.phoneNumber,
+          email: user.user.email,
+          gender: signUpData.gender,
+          uid: user.user.uid,
+        });
+        await signOut(auth);
+        navigate("/");
+      } catch (error) {
+        setError(error.message);
       }
     }
   };
@@ -279,7 +275,7 @@ function Signup() {
             {errors.error.gender && (
               <p className=" text-danger">{errors.error.gender}</p>
             )}
-            <p className=" text-danger">{error}</p>
+            {error && <p className=" text-danger">{error}</p>}
 
             <br />
             <span className="help-block">
