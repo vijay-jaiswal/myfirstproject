@@ -1,10 +1,10 @@
 import React from "react";
 import swal from "sweetalert";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { authenticate } from "../../App";
-import { useContext} from "react";
+import { useContext } from "react";
 
 function Logout() {
   let navigate = useNavigate();
@@ -14,14 +14,15 @@ function Logout() {
   const handleLogout = async (e) => {
     e.preventDefault();
     await signOut(auth);
-  localStorage.removeItem("access");
-  handleIsLogin();
+    localStorage.removeItem("access");
+    handleIsLogin();
 
-  localStorage.removeItem("userDetails");
-
+    localStorage.removeItem("userDetails");
+    localStorage.removeItem("id");
+    localStorage.removeItem("userId");
 
     swal("successfully logout!", "You clicked at logout!", "success");
-      navigate("/");
+    navigate("/");
   };
 
   return (

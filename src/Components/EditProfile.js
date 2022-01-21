@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "./Input";
-import { onAuthStateChanged } from "firebase/auth";
-import { db, auth } from "./firebase-config";
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { db } from "./firebase-config";
+import { updateDoc, doc } from "firebase/firestore";
 import { authenticate } from "../App";
 
 const EditProfile = () => {
   let navigate = useNavigate();
-  const [allUserDetails, setAllUserDetails] = useState([]);
   const [handleIsLogin] = useContext(authenticate);
-  const [user, setUser] = useState(null);
+  const [id, setId] = useState("");
+  const [userId, setUserId] = useState("");
   const [editedData, setEditedData] = useState({
     firstName: "",
     lastName: "",
@@ -21,28 +20,10 @@ const EditProfile = () => {
     error: {},
   });
 
-  //....................CHECKING IS USER LOGGEDIN OR NOT.................................
-  useEffect(() => {
-    let isSubscribed = true;
-    onAuthStateChanged(auth, (user) => {
-      if (isSubscribed) {
-        if (user) {
-          setUser(user);
-          getlist(user.uid);
-        }
-      } else setUser(null);
-    });
-    return () => (isSubscribed = false);
-  }, []);
-
-  //..............................FETCHING USER DETAILS FROM FIREBASE...........................
-  const getlist = async (id) => {
-    const data = await getDocs(collection(db, "users", id, "userDetail"));
-    setAllUserDetails(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-  };
-
   useEffect(() => {
     setEditedData(JSON.parse(localStorage.getItem("userDetails"))[0]);
+    setUserId(JSON.parse(localStorage.getItem("userId")));
+    setId(JSON.parse(localStorage.getItem("id")));
   }, []);
 
   //.......................ONCHANGE EVENT............................
@@ -116,9 +97,9 @@ const EditProfile = () => {
     return formIsValid;
   };
 
-  //....................FUNCTION DECLARATION..........................
-  const updateDetail = async (id) => {
-    const userDoc = doc(db, "users", user.uid, "userDetail", id);
+  // ....................FUNCTION DECLARATION..........................
+  const updateDetail = async (userId) => {
+    const userDoc = doc(db, "users", id, "userDetail", userId);
     const neweditedData = {
       firstName: editedData.firstName,
       lastName: editedData.lastName,
@@ -147,9 +128,7 @@ const EditProfile = () => {
       validate("lastName") &&
       validate("phoneNumber")
     ) {
-      allUserDetails.forEach((el) => {
-        updateDetail(el.id);
-      });
+      updateDetail(userId);
       navigate("/todolist");
     }
   };

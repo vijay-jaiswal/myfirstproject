@@ -12,20 +12,17 @@ const authenticate = createContext();
 
 function App() {
   const [access, setAccess] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
   const handleIsLogin = () => {
-    setIsLogin(!isLogin);
+    setAccess(!access);
   };
 
   useEffect(() => {
     setAccess(JSON.parse(localStorage.getItem("access")));
-  }, [isLogin]);
-
-  const authenticateData = [handleIsLogin];
+  }, [access]);
 
   return (
     <>
-      <authenticate.Provider value={authenticateData}>
+      <authenticate.Provider value={[handleIsLogin]}>
         {access && <Header />}
 
         <div className="container-fluid">

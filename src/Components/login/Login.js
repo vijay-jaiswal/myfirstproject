@@ -68,6 +68,8 @@ function Login() {
           loginCredentials.password
         );
         localStorage.setItem("access", true);
+        localStorage.setItem("id", JSON.stringify(user.user.uid));
+
         console.log("succesfully login");
         await getlist(user.user.uid);
         handleIsLogin();
@@ -91,9 +93,13 @@ function Login() {
           lastName: e.lastName,
           phoneNumber: e.phoneNumber,
           gender: e.gender,
+          
         },
       ];
       localStorage.setItem("userDetails", JSON.stringify(userDetails));
+      localStorage.setItem("userId", JSON.stringify(e.id));
+
+      
     });
   };
 
