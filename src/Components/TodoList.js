@@ -124,87 +124,105 @@ function TodoList() {
 
   return (
     <>
-      <div className="log-out d-flex justify-content-between"></div>
+      <br></br>
+      <br></br>
       <br></br>
 
-      <div id="myDIV" className="header">
-        <h2>My To Do List</h2>
-        <input
-          name="todo"
-          type="text"
-          id="myInput"
-          required={true}
-          onChange={handleTodo}
-          value={todos.fields.todo}
-          placeholder="Write Task"
-          className="form-control-lg"
-        />
-        {todos.errors.todo && (
-          <p className=" text-danger">{todos.errors.todo}</p>
-        )}
-
-        <input
-          name="dateTime"
-          type="dateTime-local"
-          id="myDate"
-          className="form-control-lg"
-          onChange={handleTodo}
-          value={todos.fields.dateTime}
-        />
-        {todos.errors.dateTime && (
-          <p className=" text-danger">{todos.errors.dateTime}</p>
-        )}
-
-        <br></br>
+      <div className="container-fluid" id="wrap">
+        <div className="row  justify-content-center">
+          <div className="col-md-6 col-md-offset-3 justify-content-center">
+            <legend className="text-center">My To Do List</legend>
+            <div className="row">
+              <div className="col-xs-5 col-md-5">
+                <input
+                  name="todo"
+                  type="text"
+                  required={true}
+                  className="form-control-lg"
+                  onChange={handleTodo}
+                  value={todos.fields.todo}
+                  placeholder="Write Task"
+                />
+                {todos.errors.todo && (
+                  <p className=" text-danger">{todos.errors.todo}</p>
+                )}
+              </div>
+              <div className="col-xs-7 col-md-7">
+                <input
+                  name="dateTime"
+                  type="dateTime-local"
+                  className="form-control-lg"
+                  onChange={handleTodo}
+                  value={todos.fields.dateTime}
+                />
+                {todos.errors.dateTime && (
+                  <p className=" text-danger">{todos.errors.dateTime}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="d-flex justify-content-center links">
         <button
-          className="btn btn-lg btn-primary  signup-btn"
+          className="btn btn-lg   signup-btn "
           type="button"
           onClick={handleTodoTask}
         >
           Add Task
         </button>
+      </div>
 
-        <div className="mt-4 bg-warning">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Sr. No</th>
-                <th>Todo List</th>
-                <th>Date</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {todoTask &&
-                todoTask.map((todo, index) => {
-                  return (
-                    <tr
-                      className={todo.isCompleted ? "complete" : "todo-row"}
-                      key={index}
-                    >
-                      <td>{index + 1}</td>
-                      <td
-                        onClick={() => completeTodo(todo.id, todo.isCompleted)}
-                        key={index}
+      <div className="mt-4 bg-secondary">
+        <table className="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Sr. No</th>
+              <th className="text-center">Todo List</th>
+              <th className="text-center">Date</th>
+              <th className="text-center">Status</th>
+              <th className="text-center">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todoTask &&
+              todoTask.map((todo, index) => {
+                return (
+                  <tr
+                    key={index}
+                    className={todo.isCompleted ? "complete" : "todo-row"}
+                  >
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={todo.isCompleted}
+                        onChange={() => completeTodo(todo.id, todo.isCompleted)}
+                      ></input>
+                    </td>
+                    <td>{index + 1}</td>
+                    <td className="text-center">{todo.storedTodo}</td>
+                    <td className="text-center">
+                      {moment(todo.storedDate).format(
+                        "DD-MMMM-YYYY |hh:mm:ss a"
+                      )}
+                    </td>
+                    <td className="text-center">
+                      {todo.isCompleted ? "COMPLETED" : "UN-COMPLETED"}
+                    </td>
+                    <td className="text-center">
+                      <button
+                        className="btn btn-outline-danger text-black bg-danger"
+                        onClick={() => deleteTodo(todo.id)}
                       >
-                        {todo.storedTodo}
-                      </td>
-                      <td>
-                        {moment(todo.storedDate).format(
-                          "DD-MMMM-YYYY |hh:mm:ss a"
-                        )}
-                      </td>
-                      <td>
-                        <span id="span1" onClick={() => deleteTodo(todo.id)}>
-                          X
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
+                        DELETE
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
       </div>
     </>
   );

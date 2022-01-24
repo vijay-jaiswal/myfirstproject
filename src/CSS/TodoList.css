@@ -1,45 +1,9 @@
-
-#span1{
-
-    float: right;
-    cursor: pointer;
-  }
   
   
   
   
-  .header {
-    /* background-color: a; */
-    padding: 30px 40px;
-    /* color: white; */
-    text-align:center;
-    width: 100%;
-    
-  }
-  .addBtn{
-  height: 44px;
-  }
-  .addBtn:hover {
-    background-color: yellowgreen;
-  }
-  ul{
-    list-style: none;
-    font-size: 40px;
-    color: #000;
-    text-align: left;
-  }
-  #myInput{
-    width: 400px;
-    height: 40px;
-    
-  }
-  #myDate{
-    width: 400px;
-    height: 40px;
-  }
-  .complete{
-    background-color: crimson;
-    
+    .complete{
+    background-color:silver;
     text-decoration-line: line-through;
   }
   .todo-row{

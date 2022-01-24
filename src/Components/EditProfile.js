@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Input from "./Input";
-import { db,auth } from "./firebase-config";
+import { db, auth } from "./firebase-config";
 import { updateDoc, doc } from "firebase/firestore";
 import { authenticate } from "../App";
 import { updateEmail } from "firebase/auth";
@@ -16,7 +16,7 @@ const EditProfile = () => {
     lastName: "",
     phoneNumber: "",
     gender: "",
-    email:"",
+    email: "",
   });
   const [errors, setErrors] = useState({
     error: {},
@@ -91,20 +91,19 @@ const EditProfile = () => {
           errors["phoneNumber"] = "*Please enter your phoneNumber ";
         }
         break;
-        case "email":
-          if (typeof editedData["email"] !== "undefined") {
-            if (!editedData["email"].match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)) {
-              formIsValid = false;
-              errors["email"] =
-                "*email must contain one upperCase,lowerCase and special character,ex-aBc@gmail.com";
-            }
-          }
-          if (!editedData["email"]) {
+      case "email":
+        if (typeof editedData["email"] !== "undefined") {
+          if (!editedData["email"].match(/^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/)) {
             formIsValid = false;
-            errors["email"] = "*Please enter your email-ID.";
+            errors["email"] =
+              "*email must contain one upperCase,lowerCase and special character,ex-aBc@gmail.com";
           }
-          break;
-       
+        }
+        if (!editedData["email"]) {
+          formIsValid = false;
+          errors["email"] = "*Please enter your email-ID.";
+        }
+        break;
 
       default:
         break;
@@ -122,8 +121,7 @@ const EditProfile = () => {
       lastName: editedData.lastName,
       phoneNumber: editedData.phoneNumber,
       gender: editedData.gender,
-      email:
-      editedData.email,
+      email: editedData.email,
     };
     await updateDoc(userDoc, neweditedData);
     localStorage.setItem(
@@ -134,14 +132,12 @@ const EditProfile = () => {
           lastName: editedData.lastName,
           phoneNumber: editedData.phoneNumber,
           gender: editedData.gender,
-          email:
-      editedData.email,
+          email: editedData.email,
         },
       ])
     );
     handleIsLogin();
   };
-
 
   //..........................ONCLICK EVENT(UPDATE).....................
   const handleUpdate = async () => {
@@ -151,17 +147,14 @@ const EditProfile = () => {
       validate("phoneNumber") &&
       validate("email")
     ) {
-      try{
-        await  updateEmail(auth.currentUser,editedData.email )
+      try {
+        await updateEmail(auth.currentUser, editedData.email);
         updateDetail(userId);
         navigate("/todolist");
-         }catch(error)
-         {
-     setError(error.message);
-         }
+      } catch (error) {
+        setError(error.message);
+      }
     }
-    
-    
   };
 
   return (
@@ -214,7 +207,7 @@ const EditProfile = () => {
             {errors.error.phoneNumber && (
               <p className=" text-danger">{errors.error.phoneNumber}</p>
             )}
-              Phone Number:
+            Phone Number:
             <Input
               name="email"
               type="email"
@@ -225,7 +218,6 @@ const EditProfile = () => {
             {errors.error.email && (
               <p className=" text-danger">{errors.error.email}</p>
             )}
-          
             <div>
               Gender:
               <input
@@ -254,9 +246,8 @@ const EditProfile = () => {
               Other
             </div>
             {error && <p className=" text-danger">{error}</p>}
-
             <button
-              className="btn btn-lg btn-primary btn-block signup-btn"
+              className="btn btn-lg   signup-btn "
               type="button"
               onClick={handleUpdate}
             >

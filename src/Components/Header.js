@@ -15,7 +15,7 @@ function Header() {
     e.preventDefault();
     navigate("/todolist");
   }
-    var userDetails=(JSON.parse(localStorage.getItem("userDetails"))[0]);
+  var userDetails = JSON.parse(localStorage.getItem("userDetails"))[0];
 
   if (Url === "/edit") {
     return (
@@ -23,12 +23,12 @@ function Header() {
         <nav className="navbar fixed-top navbar-light bg-primary">
           <div className="container-fluid">
             <h6 className="navbar-brand  justify-content-center  align-content-center">
-             hi.. {userDetails.firstName}
+              hi.. {userDetails.firstName}
             </h6>
 
             <form className="d-flex">
               <button
-                className="btn btn-outline-danger text-black bg-success"
+                className="btn btn-lg   signup-btn "
                 onClick={routeTodolist}
                 type="button"
               >
@@ -46,12 +46,11 @@ function Header() {
         <nav className="navbar fixed-top navbar-light bg-primary">
           <div className="container-fluid">
             <h6 className="navbar-brand  justify-content-center  align-content-center">
-             hi.. {userDetails.firstName}
-              
+              hi.. {userDetails.firstName}
             </h6>
             <form className="d-flex">
               <button
-                className="btn btn-outline-danger text-black bg-success"
+                className="btn btn-lg   signup-btn "
                 onClick={routeEdit}
                 type="button"
               >

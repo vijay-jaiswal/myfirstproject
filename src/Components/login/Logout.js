@@ -27,12 +27,8 @@ function Logout() {
 
   return (
     <div>
-      <button
-        className="btn btn-outline-danger text-black bg-danger"
-        onClick={handleLogout}
-        type="button"
-      >
-        LOGOUT
+      <button className="btn   bg-white" onClick={handleLogout} type="button">
+        <img src="logout.jpg" className="logout" alt="logout" />
       </button>
     </div>
   );
