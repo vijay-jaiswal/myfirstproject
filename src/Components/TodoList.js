@@ -2,8 +2,7 @@ import React from "react";
 import "../CSS/TodoList.css";
 import moment from "moment";
 import { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
-import { db, auth } from "./firebase-config";
+import { db } from "./firebase-config";
 import {
   collection,
   getDocs,
@@ -14,8 +13,9 @@ import {
 } from "firebase/firestore";
 
 function TodoList() {
-  const [user, setUser] = useState(null);
   const [todoTask, setTodoTask] = useState([]);
+  const [id, setId] = useState("");
+
   const [todos, setTodos] = useState({
     fields: {
       todo: "",
@@ -24,18 +24,9 @@ function TodoList() {
     errors: {},
   });
 
-  //....................CHECKING IS USER LOGGEDIN OR NOT.................................
   useEffect(() => {
-    let isSubscribed = true;
-    onAuthStateChanged(auth, (user) => {
-      if (isSubscribed) {
-        if (user) {
-          setUser(user);
-          getlist(user.uid);
-        }
-      } else setUser(null);
-    });
-    return () => (isSubscribed = false);
+    getlist(JSON.parse(localStorage.getItem("id")));
+    setId(JSON.parse(localStorage.getItem("id")));
   }, []);
 
   //....................ONCHANGE EVENT............................
@@ -85,7 +76,7 @@ function TodoList() {
     e.preventDefault();
     if (validate("todo") && validate("dateTime")) {
       if (todoTask === null) {
-        await addDoc(collection(db, "users", user.uid, "todoTask"), {
+        await addDoc(collection(db, "users", id, "todoTask"), {
           storedTodo: todos.fields.todo.trim(),
           storedDate: todos.fields.dateTime,
           isCompleted: false,
@@ -95,12 +86,12 @@ function TodoList() {
           return d.storedTodo === todos.fields.todo.trim();
         });
         if (matchData.length === 0) {
-          await addDoc(collection(db, "users", user.uid, "todoTask"), {
+          await addDoc(collection(db, "users", id, "todoTask"), {
             storedTodo: todos.fields.todo.trim(),
             storedDate: todos.fields.dateTime,
             isCompleted: false,
           });
-          getlist(user.uid);
+          getlist(id);
 
           setTodos({
             fields: {
@@ -117,18 +108,18 @@ function TodoList() {
   };
 
   //.......................DELETE TODO.......................
-  const deleteTodo = async (id) => {
-    const userDoc = doc(db, "users", user.uid, "todoTask", id);
+  const deleteTodo = async (todoId) => {
+    const userDoc = doc(db, "users", id, "todoTask", todoId);
     await deleteDoc(userDoc);
-    getlist(user.uid);
+    getlist(id);
   };
 
   //......................COMPLETED TODO........................
-  const completeTodo = async (id, isCompleted) => {
-    const userDoc = doc(db, "users", user.uid, "todoTask", id);
+  const completeTodo = async (todoId, isCompleted) => {
+    const userDoc = doc(db, "users", id, "todoTask", todoId);
     const newFields = { isCompleted: !isCompleted };
     await updateDoc(userDoc, newFields);
-    getlist(user.uid);
+    getlist(id);
   };
 
   return (
