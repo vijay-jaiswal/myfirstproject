@@ -93,7 +93,7 @@ function Login() {
           lastName: e.lastName,
           phoneNumber: e.phoneNumber,
           gender: e.gender,
-          
+          email:e.email,
         },
       ];
       localStorage.setItem("userDetails", JSON.stringify(userDetails));
